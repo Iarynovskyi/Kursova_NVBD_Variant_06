@@ -10,6 +10,7 @@ GO
    1. ОБМЕЖЕННЯ ЗА ЗАМОВЧУВАННЯМ (DEFAULT CONSTRAINTS)
    --------------------------------------------------------------------- */
 ALTER TABLE dbo.Specialties ADD CONSTRAINT DF_Specialties_ConsultMin DEFAULT (20) FOR StandardConsultMinutes;
+ALTER TABLE dbo.Specialties ADD CONSTRAINT DF_Specialties_HourlyRate DEFAULT (500.00) FOR HourlyRate;
 
 ALTER TABLE dbo.Doctors ADD CONSTRAINT DF_Doctors_IsActive DEFAULT (1) FOR IsActive;
 ALTER TABLE dbo.Doctors ADD CONSTRAINT DF_Doctors_CreatedAt DEFAULT (SYSDATETIME()) FOR CreatedAt;
@@ -22,6 +23,7 @@ ALTER TABLE dbo.Diseases ADD CONSTRAINT DF_Diseases_IsChronic DEFAULT (0) FOR Is
 
 ALTER TABLE dbo.Visits ADD CONSTRAINT DF_Visits_VisitType DEFAULT (N'Первинний') FOR VisitType;
 ALTER TABLE dbo.Visits ADD CONSTRAINT DF_Visits_Duration DEFAULT (20) FOR DurationMinutes;
+ALTER TABLE dbo.Visits ADD CONSTRAINT DF_Visits_IsFreeNSZU DEFAULT (0) FOR IsFreeNSZU;
 ALTER TABLE dbo.Visits ADD CONSTRAINT DF_Visits_UpdatedAt DEFAULT (SYSDATETIME()) FOR UpdatedAt;
 
 ALTER TABLE dbo.Diagnoses ADD CONSTRAINT DF_Diagnoses_IsPrimary DEFAULT (1) FOR IsPrimary;
@@ -41,14 +43,12 @@ ALTER TABLE dbo.Specialties ADD CONSTRAINT UQ_Specialties_Name UNIQUE (Specialty
 ALTER TABLE dbo.Doctors ADD CONSTRAINT UQ_Doctors_LicenseNumber UNIQUE (LicenseNumber);
 ALTER TABLE dbo.Patients ADD CONSTRAINT UQ_Patients_MedicalCardNumber UNIQUE (MedicalCardNumber);
 
--- Унікальний фільтрований індекс для РНОКПП (дозволяє декілька NULL для осіб без коду)
 CREATE UNIQUE NONCLUSTERED INDEX UQ_Patients_TaxCode 
 ON dbo.Patients(TaxCode) WHERE TaxCode IS NOT NULL;
 
 ALTER TABLE dbo.Diseases ADD CONSTRAINT UQ_Diseases_ICD10Code UNIQUE (ICD10Code);
 ALTER TABLE dbo.Medications ADD CONSTRAINT UQ_Medications_RegistrationCode UNIQUE (RegistrationCode);
 
--- Унікальність пар протипоказань (включаючи покриваючі колонки для швидкої роботи тригера)
 ALTER TABLE dbo.MedicationDiseaseContraindications 
 ADD CONSTRAINT UQ_MedDiseaseContra_Pair UNIQUE (MedicationID, DiseaseID);
 
@@ -64,6 +64,8 @@ ALTER TABLE dbo.Departments ADD CONSTRAINT CK_Departments_Floor
 
 ALTER TABLE dbo.Specialties ADD CONSTRAINT CK_Specialties_ConsultMinutes 
     CHECK (StandardConsultMinutes BETWEEN 5 AND 120);
+ALTER TABLE dbo.Specialties ADD CONSTRAINT CK_Specialties_HourlyRate 
+    CHECK (HourlyRate > 0 AND HourlyRate <= 10000);
 
 ALTER TABLE dbo.Doctors ADD CONSTRAINT CK_Doctors_Category 
     CHECK (QualificationCategory IN (N'Спеціаліст', N'Друга', N'Перша', N'Вища'));
@@ -92,8 +94,6 @@ ALTER TABLE dbo.Visits ADD CONSTRAINT CK_Visits_Type
     CHECK (VisitType IN (N'Первинний', N'Повторний', N'Профілактичний', N'Невідкладний'));
 ALTER TABLE dbo.Visits ADD CONSTRAINT CK_Visits_Duration 
     CHECK (DurationMinutes BETWEEN 5 AND 180);
-ALTER TABLE dbo.Visits ADD CONSTRAINT CK_Visits_Cost 
-    CHECK (ConsultationCost >= 0);
 
 ALTER TABLE dbo.Diagnoses ADD CONSTRAINT CK_Diagnoses_Severity 
     CHECK (Severity IN (N'Легка', N'Середня', N'Тяжка', N'Критична'));
@@ -147,43 +147,34 @@ GO
 /* ---------------------------------------------------------------------
    5. НЕКЛАСТЕРИЗОВАНІ ІНДЕКСИ ДЛЯ ОПТИМІЗАЦІЇ ЗАПИТІВ (500K+ ЗАПИСІВ)
    --------------------------------------------------------------------- */
-
--- Індекс 1: Оптимізація звіту "Завантаженість лікарів по місяцях" та ETL Extract
 CREATE NONCLUSTERED INDEX IX_Visits_VisitDateTime_Doctor 
 ON dbo.Visits (VisitDateTime ASC, DoctorID ASC)
-INCLUDE (PatientID, DurationMinutes, ConsultationCost);
+INCLUDE (PatientID, DurationMinutes, IsFreeNSZU);
 
--- Індекс 2: Оптимізація звіту "Історія хвороби пацієнта"
 CREATE NONCLUSTERED INDEX IX_Visits_PatientID_Date 
 ON dbo.Visits (PatientID ASC, VisitDateTime DESC)
-INCLUDE (DoctorID, VisitType, DurationMinutes);
+INCLUDE (DoctorID, VisitType, DurationMinutes, IsFreeNSZU);
 
--- Індекс 3: Оптимізація звіту "Список лікарів та їх пацієнтів"
 CREATE NONCLUSTERED INDEX IX_Visits_DoctorID_Patient 
 ON dbo.Visits (DoctorID ASC, PatientID ASC)
 INCLUDE (VisitDateTime);
 
--- Індекс 4: Оптимізація звітів "Аналіз ефективності лікування" та "Статистика захворювань"
 CREATE NONCLUSTERED INDEX IX_Diagnoses_DiseaseID_Outcome 
 ON dbo.Diagnoses (DiseaseID ASC, DiagnosisDate ASC)
 INCLUDE (TreatmentOutcome, Severity, RecoveryDate, SickLeaveDays, VisitID);
 
--- Індекс 5: Прискорення JOIN між Visits та Diagnoses
 CREATE NONCLUSTERED INDEX IX_Diagnoses_VisitID 
 ON dbo.Diagnoses (VisitID ASC)
 INCLUDE (DiseaseID, DiagnosisDate, IsPrimary, TreatmentOutcome);
 
--- Індекс 6: Прискорення JOIN між Diagnoses та Prescriptions
 CREATE NONCLUSTERED INDEX IX_Prescriptions_DiagnosisID 
 ON dbo.Prescriptions (DiagnosisID ASC)
 INCLUDE (MedicationID, QuantityPackages, DurationDays, IsSubsidized);
 
--- Індекс 7: Швидкий пошук пацієнтів за ПІБ та фільтрація за районом
 CREATE NONCLUSTERED INDEX IX_Patients_LastName_FirstName 
 ON dbo.Patients (LastName ASC, FirstName ASC)
 INCLUDE (MedicalCardNumber, BirthDate, DistrictName, Phone);
 
--- Індекс 8: Фільтрація лікарів за відділенням та спеціалізацією (для каскадних параметрів)
 CREATE NONCLUSTERED INDEX IX_Doctors_Department_Specialty 
 ON dbo.Doctors (DepartmentID ASC, SpecialtyID ASC)
 INCLUDE (LastName, FirstName, QualificationCategory, IsActive);

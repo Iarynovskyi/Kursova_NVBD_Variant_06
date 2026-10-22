@@ -30,8 +30,27 @@ END;
 GO
 
 /* ---------------------------------------------------------------------
-   ФУНКЦІЯ 2 (Таблична): Отримання повного списку протипоказаних ліків для пацієнта
-   Об'єднує особисті алергії та протипоказання через хвороби пацієнта
+   ФУНКЦІЯ 2 (Скалярна): Динамічний розрахунок вартості прийому
+   На основі витраченого часу (DurationMinutes) та погодинної ставки (HourlyRate)
+   --------------------------------------------------------------------- */
+CREATE OR ALTER FUNCTION dbo.ufn_CalculateVisitCost (
+    @DurationMinutes SMALLINT,
+    @HourlyRate DECIMAL(10,2),
+    @IsFreeNSZU BIT
+)
+RETURNS DECIMAL(10,2)
+WITH SCHEMABINDING
+AS
+BEGIN
+    IF @IsFreeNSZU = 1
+        RETURN 0.00;
+
+    RETURN CAST((@DurationMinutes / 60.0) * @HourlyRate AS DECIMAL(10,2));
+END;
+GO
+
+/* ---------------------------------------------------------------------
+   ФУНКЦІЯ 3 (Таблична): Отримання повного списку протипоказаних ліків для пацієнта
    --------------------------------------------------------------------- */
 CREATE OR ALTER FUNCTION dbo.ufn_GetPatientContraindicatedMedications (
     @PatientID INT
@@ -40,7 +59,6 @@ RETURNS TABLE
 AS
 RETURN
 (
-    -- 1. Особисті алергії пацієнта
     SELECT 
         m.MedicationID,
         m.TradeName,
@@ -53,7 +71,6 @@ RETURN
 
     UNION
 
-    -- 2. Протипоказання через наявні або хронічні хвороби пацієнта
     SELECT DISTINCT
         m.MedicationID,
         m.TradeName,
@@ -79,7 +96,7 @@ CREATE OR ALTER PROCEDURE dbo.usp_RegisterVisitAndDiagnosis
     @VisitDateTime DATETIME2(0),
     @VisitType NVARCHAR(30),
     @DurationMinutes SMALLINT,
-    @ConsultationCost DECIMAL(10,2),
+    @IsFreeNSZU BIT = 0,
     @Complaints NVARCHAR(500),
     @DiseaseID INT,
     @Severity NVARCHAR(20),
@@ -96,11 +113,11 @@ BEGIN
 
         INSERT INTO dbo.Visits (
             PatientID, DoctorID, VisitDateTime, VisitType, 
-            DurationMinutes, ConsultationCost, Complaints
+            DurationMinutes, IsFreeNSZU, Complaints
         )
         VALUES (
             @PatientID, @DoctorID, @VisitDateTime, @VisitType, 
-            @DurationMinutes, @ConsultationCost, @Complaints
+            @DurationMinutes, @IsFreeNSZU, @Complaints
         );
 
         SET @NewVisitID = SCOPE_IDENTITY();
@@ -187,9 +204,7 @@ GO
 
 /* ---------------------------------------------------------------------
    ПРОЦЕДУРА 4: Аналіз завантаженості лікарів по місяцях (на базі OLTP)
-   Використовується для:
-   1) Звіту №3 "Завантаженість лікарів по місяцях"
-   2) Порівняння часу виконання запитів OLTP vs OLAP (Додаткові вимоги, п. 2)
+   Динамічно обчислює вартість візитів через DurationMinutes та HourlyRate
    --------------------------------------------------------------------- */
 CREATE OR ALTER PROCEDURE dbo.usp_GetDoctorMonthlyWorkload
     @StartDate DATE,
@@ -204,6 +219,7 @@ BEGIN
         MONTH(v.VisitDateTime) AS VisitMonth,
         dep.DepartmentName,
         spec.SpecialtyName,
+        spec.HourlyRate,
         doc.DoctorID,
         doc.LastName + N' ' + doc.FirstName + ISNULL(N' ' + doc.MiddleName, N'') AS DoctorFullName,
         doc.QualificationCategory,
@@ -211,7 +227,7 @@ BEGIN
         COUNT(DISTINCT v.PatientID) AS UniquePatients,
         SUM(v.DurationMinutes) AS TotalMinutesSpent,
         CAST(SUM(v.DurationMinutes) / 60.0 AS DECIMAL(10,2)) AS TotalHoursSpent,
-        SUM(v.ConsultationCost) AS TotalConsultationRevenue
+        SUM(dbo.ufn_CalculateVisitCost(v.DurationMinutes, spec.HourlyRate, v.IsFreeNSZU)) AS CalculatedRevenue
     FROM dbo.Visits v
     INNER JOIN dbo.Doctors doc ON v.DoctorID = doc.DoctorID
     INNER JOIN dbo.Departments dep ON doc.DepartmentID = dep.DepartmentID
@@ -224,6 +240,7 @@ BEGIN
         MONTH(v.VisitDateTime),
         dep.DepartmentName,
         spec.SpecialtyName,
+        spec.HourlyRate,
         doc.DoctorID,
         doc.LastName,
         doc.FirstName,
@@ -236,5 +253,5 @@ BEGIN
 END;
 GO
 
-PRINT N'Усі функції та збережені процедури успішно створено.';
+PRINT N'Усі функції та збережені процедури успішно оновлено.';
 GO

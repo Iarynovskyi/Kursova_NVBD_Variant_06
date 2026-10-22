@@ -6,7 +6,7 @@
 USE PolyclinicOLTP;
 GO
 
--- Видалення таблиць у зворотному порядку залежностей (якщо скрипт запускається повторно)
+-- Видалення таблиць у зворотному порядку залежностей
 DROP TABLE IF EXISTS dbo.Prescriptions;
 DROP TABLE IF EXISTS dbo.Diagnoses;
 DROP TABLE IF EXISTS dbo.Visits;
@@ -29,11 +29,12 @@ CREATE TABLE dbo.Departments (
     CONSTRAINT PK_Departments PRIMARY KEY CLUSTERED (DepartmentID)
 );
 
--- 2. Спеціалізації лікарів
+-- 2. Спеціалізації лікарів (містить норматив часу та погодинний тариф)
 CREATE TABLE dbo.Specialties (
     SpecialtyID INT IDENTITY(1,1) NOT NULL,
     SpecialtyName NVARCHAR(100) NOT NULL,
     StandardConsultMinutes TINYINT NOT NULL,
+    HourlyRate DECIMAL(10,2) NOT NULL,
     CONSTRAINT PK_Specialties PRIMARY KEY CLUSTERED (SpecialtyID)
 );
 
@@ -118,6 +119,7 @@ CREATE TABLE dbo.PatientContraindications (
 );
 
 -- 9. Амбулаторні прийоми / Візити (500 000+ записів за 10 років)
+-- Вартість не зберігається напряму (3НФ), а обчислюється через DurationMinutes та Specialties.HourlyRate
 CREATE TABLE dbo.Visits (
     VisitID BIGINT IDENTITY(1,1) NOT NULL,
     PatientID INT NOT NULL,
@@ -125,7 +127,7 @@ CREATE TABLE dbo.Visits (
     VisitDateTime DATETIME2(0) NOT NULL,
     VisitType NVARCHAR(30) NOT NULL,
     DurationMinutes SMALLINT NOT NULL,
-    ConsultationCost DECIMAL(10,2) NOT NULL,
+    IsFreeNSZU BIT NOT NULL,
     Complaints NVARCHAR(500) NULL,
     UpdatedAt DATETIME2(0) NOT NULL,
     CONSTRAINT PK_Visits PRIMARY KEY CLUSTERED (VisitID)
@@ -160,5 +162,5 @@ CREATE TABLE dbo.Prescriptions (
 );
 GO
 
-PRINT N'Усі 11 таблиць успішно створено.';
+PRINT N'Усі 11 таблиць успішно перестворено.';
 GO
