@@ -1,0 +1,46 @@
+# ===== Visual Studio / SSDT =====
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+[Bb]in/
+[Oo]bj/
+*.cache
+*.tmp
+
+# SSIS
+*.dtproj.user
+*.database.bak
+
+# SSAS (артефакти збірки/розгортання)
+*.asdatabase
+*.deploymentoptions
+*.deploymenttargets
+*.configsettings
+
+# SSRS
+*.rdl.data
+*.rptproj.user
+*.rptproj.rsuser
+
+# ===== SQL Server =====
+*.bak
+*.trn
+*.mdf
+*.ldf
+*.ndf
+*.abf
+
+# ===== Журнали та локальні службові файли =====
+logs/
+*.log
+.agent/
+
+# Локальний контекст AI-асистента (не є частиною курсової)
+CLAUDE.md
+
+# ===== ОС =====
+Thumbs.db
+desktop.ini
+.DS_Store

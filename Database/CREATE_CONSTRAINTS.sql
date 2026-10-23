@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    Файл: CREATE_CONSTRAINTS.sql
    Опис: Створення обмежень цілісності (DEFAULT, UNIQUE, CHECK, FK) та індексів
    ===================================================================== */
@@ -54,6 +54,14 @@ ADD CONSTRAINT UQ_MedDiseaseContra_Pair UNIQUE (MedicationID, DiseaseID);
 
 ALTER TABLE dbo.PatientContraindications 
 ADD CONSTRAINT UQ_PatientContra_Pair UNIQUE (PatientID, MedicationID);
+
+-- Одна хвороба фіксується в межах одного візиту лише один раз
+ALTER TABLE dbo.Diagnoses
+ADD CONSTRAINT UQ_Diagnoses_Visit_Disease UNIQUE (VisitID, DiseaseID);
+
+-- У кожного візиту може бути лише ОДИН основний діагноз (фільтрований унікальний індекс)
+CREATE UNIQUE NONCLUSTERED INDEX UX_Diagnoses_OnePrimaryPerVisit
+ON dbo.Diagnoses(VisitID) WHERE IsPrimary = 1;
 GO
 
 /* ---------------------------------------------------------------------
@@ -71,6 +79,11 @@ ALTER TABLE dbo.Doctors ADD CONSTRAINT CK_Doctors_Category
     CHECK (QualificationCategory IN (N'Спеціаліст', N'Друга', N'Перша', N'Вища'));
 ALTER TABLE dbo.Doctors ADD CONSTRAINT CK_Doctors_HireDate 
     CHECK (HireDate >= '1970-01-01' AND HireDate <= CAST(SYSDATETIME() AS DATE));
+ALTER TABLE dbo.Doctors ADD CONSTRAINT CK_Doctors_DismissalDate
+    CHECK (DismissalDate IS NULL OR DismissalDate >= HireDate);
+-- Узгодженість статусу: активний лікар не має дати звільнення, звільнений — обов'язково має
+ALTER TABLE dbo.Doctors ADD CONSTRAINT CK_Doctors_ActiveStatus
+    CHECK ((IsActive = 1 AND DismissalDate IS NULL) OR (IsActive = 0 AND DismissalDate IS NOT NULL));
 
 ALTER TABLE dbo.Patients ADD CONSTRAINT CK_Patients_Gender 
     CHECK (Gender IN ('M', 'F'));
@@ -103,6 +116,10 @@ ALTER TABLE dbo.Diagnoses ADD CONSTRAINT CK_Diagnoses_RecoveryDate
     CHECK (RecoveryDate IS NULL OR RecoveryDate >= DiagnosisDate);
 ALTER TABLE dbo.Diagnoses ADD CONSTRAINT CK_Diagnoses_SickLeave 
     CHECK (SickLeaveDays BETWEEN 0 AND 365);
+-- Бізнес-правило: дата одужання відсутня тоді й лише тоді, коли лікування триває ("В процесі")
+ALTER TABLE dbo.Diagnoses ADD CONSTRAINT CK_Diagnoses_OutcomeRecovery
+    CHECK ((TreatmentOutcome = N'В процесі' AND RecoveryDate IS NULL)
+        OR (TreatmentOutcome <> N'В процесі' AND RecoveryDate IS NOT NULL));
 
 ALTER TABLE dbo.Prescriptions ADD CONSTRAINT CK_Prescriptions_Duration 
     CHECK (DurationDays BETWEEN 1 AND 365);
@@ -117,6 +134,9 @@ ALTER TABLE dbo.Doctors ADD CONSTRAINT FK_Doctors_Departments
     FOREIGN KEY (DepartmentID) REFERENCES dbo.Departments(DepartmentID);
 ALTER TABLE dbo.Doctors ADD CONSTRAINT FK_Doctors_Specialties 
     FOREIGN KEY (SpecialtyID) REFERENCES dbo.Specialties(SpecialtyID);
+
+ALTER TABLE dbo.Diseases ADD CONSTRAINT FK_Diseases_Specialties
+    FOREIGN KEY (ProfileSpecialtyID) REFERENCES dbo.Specialties(SpecialtyID);
 
 ALTER TABLE dbo.MedicationDiseaseContraindications ADD CONSTRAINT FK_MedDiseaseContra_Medications 
     FOREIGN KEY (MedicationID) REFERENCES dbo.Medications(MedicationID);
@@ -171,13 +191,22 @@ CREATE NONCLUSTERED INDEX IX_Prescriptions_DiagnosisID
 ON dbo.Prescriptions (DiagnosisID ASC)
 INCLUDE (MedicationID, QuantityPackages, DurationDays, IsSubsidized);
 
+-- Пошук рецептів за препаратом (аналітика призначень, FK-індекс)
+CREATE NONCLUSTERED INDEX IX_Prescriptions_MedicationID 
+ON dbo.Prescriptions (MedicationID ASC)
+INCLUDE (DiagnosisID, QuantityPackages, IsSubsidized);
+
+-- Пошук алергій за препаратом (FK-індекс; пара PatientID+MedicationID вже покрита UNIQUE)
+CREATE NONCLUSTERED INDEX IX_PatientContra_MedicationID 
+ON dbo.PatientContraindications (MedicationID ASC);
+
 CREATE NONCLUSTERED INDEX IX_Patients_LastName_FirstName 
 ON dbo.Patients (LastName ASC, FirstName ASC)
 INCLUDE (MedicalCardNumber, BirthDate, DistrictName, Phone);
 
 CREATE NONCLUSTERED INDEX IX_Doctors_Department_Specialty 
 ON dbo.Doctors (DepartmentID ASC, SpecialtyID ASC)
-INCLUDE (LastName, FirstName, QualificationCategory, IsActive);
+INCLUDE (LastName, FirstName, QualificationCategory, IsActive, HireDate, DismissalDate);
 GO
 
 PRINT N'Усі обмеження цілісності та індекси успішно створено.';

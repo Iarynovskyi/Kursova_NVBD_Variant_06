@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    Файл: CREATE_TABLES.sql
    Опис: Створення таблиць БД "Поліклініка" (3НФ) та первинних ключів
    ===================================================================== */
@@ -49,6 +49,7 @@ CREATE TABLE dbo.Doctors (
     MiddleName NVARCHAR(50) NULL,
     QualificationCategory NVARCHAR(30) NOT NULL,
     HireDate DATE NOT NULL,
+    DismissalDate DATE NULL,                      -- дата звільнення (NULL = працює)
     IsActive BIT NOT NULL,
     CreatedAt DATETIME2(0) NOT NULL,
     UpdatedAt DATETIME2(0) NOT NULL,
@@ -79,8 +80,9 @@ CREATE TABLE dbo.Diseases (
     DiseaseID INT IDENTITY(1,1) NOT NULL,
     ICD10Code VARCHAR(10) NOT NULL,
     DiseaseName NVARCHAR(200) NOT NULL,
-    DiseaseCategory NVARCHAR(100) NOT NULL,
+    DiseaseCategory NVARCHAR(100) NOT NULL,       -- клас (розділ) МКХ-10
     IsChronic BIT NOT NULL,
+    ProfileSpecialtyID INT NOT NULL,              -- профільна спеціальність лікаря (FK -> Specialties)
     CONSTRAINT PK_Diseases PRIMARY KEY CLUSTERED (DiseaseID)
 );
 

@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    Файл: CREATE_TRIGGERS.sql
    Опис: Створення тригерів для контролю складних бізнес-правил поліклініки
    ===================================================================== */
@@ -67,6 +67,10 @@ GO
 
 /* ---------------------------------------------------------------------
    ТРИГЕР 2: Перевірка коректності дати прийому та статусу лікаря (BR-2)
+   1) візит не раніше дати народження пацієнта            -> 50003
+   2) візит не раніше дати прийому лікаря на роботу       -> 50004
+   3) візит не пізніше дати звільнення лікаря; новий візит
+      не можна записати до неактивного (звільненого) лікаря -> 50005
    --------------------------------------------------------------------- */
 CREATE OR ALTER TRIGGER dbo.TR_Visits_ValidateBusinessRules
 ON dbo.Visits
@@ -100,12 +104,52 @@ BEGIN
         THROW 50004, N'ПОМИЛКА ДАНИХ: Дата візиту не може бути ранішою за дату прийому лікаря на роботу.', 1;
         RETURN;
     END
+
+    -- Перевірка статусу лікаря: після звільнення прийом неможливий;
+    -- новий запис (INSERT) до неактивного лікаря заборонено
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN dbo.Doctors doc ON i.DoctorID = doc.DoctorID
+        WHERE (doc.DismissalDate IS NOT NULL AND CAST(i.VisitDateTime AS DATE) > doc.DismissalDate)
+           OR (doc.IsActive = 0 AND NOT EXISTS (SELECT 1 FROM deleted d WHERE d.VisitID = i.VisitID))
+    )
+    BEGIN
+        ROLLBACK TRANSACTION;
+        THROW 50005, N'ПОМИЛКА ДАНИХ: Лікар звільнений (неактивний) — запис на прийом після дати звільнення неможливий.', 1;
+        RETURN;
+    END
 END;
 GO
 
 /* ---------------------------------------------------------------------
-   ТРИГЕРИ 3 & 4: Автоматичне оновлення поля UpdatedAt при UPDATE
+   ТРИГЕР 3: Дата встановлення діагнозу не може передувати даті візиту (BR-3)
+   --------------------------------------------------------------------- */
+CREATE OR ALTER TRIGGER dbo.TR_Diagnoses_ValidateBusinessRules
+ON dbo.Diagnoses
+AFTER INSERT, UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN dbo.Visits v ON i.VisitID = v.VisitID
+        WHERE i.DiagnosisDate < CAST(v.VisitDateTime AS DATE)
+    )
+    BEGIN
+        ROLLBACK TRANSACTION;
+        THROW 50006, N'ПОМИЛКА ДАНИХ: Дата діагнозу не може бути ранішою за дату візиту.', 1;
+        RETURN;
+    END
+END;
+GO
+
+/* ---------------------------------------------------------------------
+   ТРИГЕРИ 4-7: Автоматичне оновлення поля UpdatedAt при UPDATE
    Забезпечує роботу інкрементального завантаження (Incremental Load) у SSIS
+   для всіх таблиць, що мають watermark у сховищі (Patients, Doctors, Visits, Diagnoses)
    --------------------------------------------------------------------- */
 CREATE OR ALTER TRIGGER dbo.TR_Patients_UpdateTimestamp
 ON dbo.Patients
@@ -119,6 +163,38 @@ BEGIN
         SET UpdatedAt = SYSDATETIME()
         FROM dbo.Patients p
         INNER JOIN inserted i ON p.PatientID = i.PatientID;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.TR_Doctors_UpdateTimestamp
+ON dbo.Doctors
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT UPDATE(UpdatedAt)
+    BEGIN
+        UPDATE d
+        SET UpdatedAt = SYSDATETIME()
+        FROM dbo.Doctors d
+        INNER JOIN inserted i ON d.DoctorID = i.DoctorID;
+    END
+END;
+GO
+
+CREATE OR ALTER TRIGGER dbo.TR_Visits_UpdateTimestamp
+ON dbo.Visits
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT UPDATE(UpdatedAt)
+    BEGIN
+        UPDATE v
+        SET UpdatedAt = SYSDATETIME()
+        FROM dbo.Visits v
+        INNER JOIN inserted i ON v.VisitID = i.VisitID;
     END
 END;
 GO

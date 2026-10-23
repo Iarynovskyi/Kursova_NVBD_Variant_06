@@ -1,4 +1,4 @@
-/* =====================================================================
+﻿/* =====================================================================
    Файл: CREATE_PROCEDURES.sql
    Опис: Створення користувацьких функцій (UDF) та збережених процедур
    ===================================================================== */
@@ -191,14 +191,36 @@ CREATE OR ALTER PROCEDURE dbo.usp_CloseDiagnosisCase
 AS
 BEGIN
     SET NOCOUNT ON;
+    SET XACT_ABORT ON;
 
-    UPDATE dbo.Diagnoses
-    SET 
-        TreatmentOutcome = @TreatmentOutcome,
-        RecoveryDate = @RecoveryDate,
-        SickLeaveDays = ISNULL(@TotalSickLeaveDays, SickLeaveDays),
-        UpdatedAt = SYSDATETIME()
-    WHERE DiagnosisID = @DiagnosisID;
+    -- Валідація вхідних параметрів (бізнес-правила закриття випадку)
+    IF @TreatmentOutcome = N'В процесі'
+        THROW 50010, N'Закриття випадку: результат лікування не може бути "В процесі".', 1;
+    IF @RecoveryDate IS NULL
+        THROW 50011, N'Закриття випадку: потрібно вказати дату завершення лікування.', 1;
+    IF NOT EXISTS (SELECT 1 FROM dbo.Diagnoses WHERE DiagnosisID = @DiagnosisID)
+        THROW 50012, N'Закриття випадку: діагноз з таким ідентифікатором не знайдено.', 1;
+    IF EXISTS (SELECT 1 FROM dbo.Diagnoses WHERE DiagnosisID = @DiagnosisID AND TreatmentOutcome <> N'В процесі')
+        THROW 50013, N'Закриття випадку: випадок уже закрито раніше.', 1;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        UPDATE dbo.Diagnoses
+        SET 
+            TreatmentOutcome = @TreatmentOutcome,
+            RecoveryDate = @RecoveryDate,
+            SickLeaveDays = ISNULL(@TotalSickLeaveDays, SickLeaveDays),
+            UpdatedAt = SYSDATETIME()
+        WHERE DiagnosisID = @DiagnosisID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
 END;
 GO
 
@@ -250,6 +272,40 @@ BEGIN
         VisitYear DESC, 
         VisitMonth DESC, 
         TotalVisits DESC;
+END;
+GO
+
+/* ---------------------------------------------------------------------
+   ПРОЦЕДУРА 5: Історія хвороби пацієнта (основа для звіту "Історія хвороби пацієнта")
+   --------------------------------------------------------------------- */
+CREATE OR ALTER PROCEDURE dbo.usp_GetPatientMedicalHistory
+    @PatientID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.VisitID,
+        v.VisitDateTime,
+        v.VisitType,
+        doc.LastName + N' ' + doc.FirstName + ISNULL(N' ' + doc.MiddleName, N'') AS DoctorFullName,
+        spec.SpecialtyName,
+        dis.ICD10Code,
+        dis.DiseaseName,
+        diag.IsPrimary,
+        diag.Severity,
+        diag.TreatmentOutcome,
+        diag.RecoveryDate,
+        diag.SickLeaveDays,
+        (SELECT COUNT(*) FROM dbo.Prescriptions pr WHERE pr.DiagnosisID = diag.DiagnosisID) AS PrescriptionsCount,
+        v.Complaints
+    FROM dbo.Visits v
+    INNER JOIN dbo.Diagnoses diag ON diag.VisitID = v.VisitID
+    INNER JOIN dbo.Diseases dis ON dis.DiseaseID = diag.DiseaseID
+    INNER JOIN dbo.Doctors doc ON doc.DoctorID = v.DoctorID
+    INNER JOIN dbo.Specialties spec ON spec.SpecialtyID = doc.SpecialtyID
+    WHERE v.PatientID = @PatientID
+    ORDER BY v.VisitDateTime DESC, diag.IsPrimary DESC;
 END;
 GO
 
