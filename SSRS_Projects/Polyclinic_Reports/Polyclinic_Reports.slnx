@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="DebugLocal" />
+    <BuildType Name="Release" />
+    <Platform Name="Default" />
+  </Configurations>
+  <Project Path="Polyclinic_Reports/Polyclinic_Reports.rptproj">
+    <Deploy Solution="Debug|*" />
+    <Deploy Solution="Release|*" />
+  </Project>
+</Solution>

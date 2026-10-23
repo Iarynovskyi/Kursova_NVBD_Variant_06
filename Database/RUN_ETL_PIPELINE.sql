@@ -32,6 +32,7 @@ CREATE OR ALTER PROCEDURE etl.usp_StartExecution
 AS
 BEGIN
     SET NOCOUNT ON;
+    IF @ParentExecutionID = 0 SET @ParentExecutionID = NULL;   -- SSIS передає 0, якщо батьківського пакета немає
     INSERT INTO etl.PackageExecutionLog (PackageName, LoadType, ParentExecutionID, StartTime, ExecutionStatus)
     VALUES (@PackageName, @LoadType, @ParentExecutionID, SYSDATETIME(), N'Running');
     SET @ExecutionID = SCOPE_IDENTITY();
@@ -446,7 +447,194 @@ BEGIN
     DBCC CHECKIDENT ('dbo.DimMedication', RESEED, 0) WITH NO_INFOMSGS;
     UPDATE etl.Watermarks SET LastLoadedValue = '1900-01-01', LastExecutionID = NULL, LastUpdated = SYSDATETIME();
     DELETE FROM etl.ProcessedFiles;
+    TRUNCATE TABLE stg.Patient;    TRUNCATE TABLE stg.Doctor;     TRUNCATE TABLE stg.Disease;
+    TRUNCATE TABLE stg.Medication; TRUNCATE TABLE stg.FactVisits; TRUNCATE TABLE stg.FactPrescriptions;
+    TRUNCATE TABLE stg.DoctorMonthlySummary; TRUNCATE TABLE stg.ArchiveVisitRaw;
 END;
+GO
+
+/* =====================================================================
+   5a. ПРОЦЕДУРИ-ОБГОРТКИ ДЛЯ ПАКЕТІВ SSIS (SSIS_Projects/Polyclinic_ETL)
+       Викликаються з Execute SQL Task одним рядком EXEC ... ?, ?, ...
+   ===================================================================== */
+
+-- Застосування staging-даних до виміру + запис у журнал задач
+CREATE OR ALTER PROCEDURE etl.usp_SSIS_ApplyDimension
+    @Dimension   NVARCHAR(50),
+    @ExecutionID INT,
+    @RowsRead    INT = 0,
+    @TaskStart   DATETIME = NULL,
+    @RowsInsertedByDataFlow INT = NULL   -- SCD1: нові рядки вставляє сам Data Flow (OLE DB Destination)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @i INT = 0, @u INT = 0, @nv INT = 0, @t1 INT = 0, @Task NVARCHAR(150), @Notes NVARCHAR(500);
+    DECLARE @Eff DATETIME2(0) = SYSDATETIME();
+    BEGIN TRAN;
+    IF @Dimension = N'DimPatient'
+    BEGIN
+        EXEC etl.usp_Load_DimPatient_SCD2 @ExecutionID, @Eff, @i OUTPUT, @nv OUTPUT, @t1 OUTPUT;
+        SELECT @u = @nv + @t1, @Task = N'DimPatient (SCD2, SSIS)',
+               @Notes = CONCAT(N'Нових пацієнтів: ', @i, N'; нових версій SCD2: ', @nv, N'; перезаписів SCD1: ', @t1);
+    END
+    ELSE IF @Dimension = N'DimDoctor'
+    BEGIN
+        EXEC etl.usp_Load_DimDoctor_SCD2 @ExecutionID, @Eff, @i OUTPUT, @nv OUTPUT, @t1 OUTPUT;
+        SELECT @u = @nv + @t1, @Task = N'DimDoctor (SCD2, SSIS)',
+               @Notes = CONCAT(N'Нових лікарів: ', @i, N'; нових версій SCD2: ', @nv, N'; перезаписів SCD1: ', @t1);
+    END
+    ELSE IF @Dimension = N'DimDisease'
+    BEGIN
+        EXEC etl.usp_Load_DimDisease @ExecutionID, @i OUTPUT, @u OUTPUT;
+        SELECT @Task = N'DimDisease (SCD1 update, SSIS)', @Notes = CONCAT(N'Оновлено (SCD1): ', @u);
+    END
+    ELSE IF @Dimension = N'DimMedication'
+    BEGIN
+        EXEC etl.usp_Load_DimMedication @ExecutionID, @i OUTPUT, @u OUTPUT;
+        SELECT @Task = N'DimMedication (SCD1 update, SSIS)', @Notes = CONCAT(N'Оновлено (SCD1): ', @u);
+    END
+    ELSE
+        THROW 50203, N'Невідомий вимір для etl.usp_SSIS_ApplyDimension.', 1;
+    COMMIT;
+    IF @RowsInsertedByDataFlow IS NOT NULL
+        SELECT @i = @RowsInsertedByDataFlow, @Notes = CONCAT(N'Нових (Data Flow): ', @RowsInsertedByDataFlow, N'; ', @Notes);
+    EXEC etl.usp_LogTask @ExecutionID, @Task, @RowsRead, @i, @u, 0, @TaskStart, @Notes;
+END;
+GO
+
+-- Імітація збою для перевірки відновлення з checkpoint (параметр проєкту SimulateFailureAt)
+CREATE OR ALTER PROCEDURE etl.usp_SSIS_CheckSimulatedFailure
+    @SimulateFailureAt NVARCHAR(100),
+    @PackageName       NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF @SimulateFailureAt IS NOT NULL AND @SimulateFailureAt = @PackageName
+    BEGIN
+        DECLARE @msg NVARCHAR(400) = N'Імітація збою у пакеті ' + @PackageName
+            + N' (параметр SimulateFailureAt). Повторний запуск продовжить роботу з контрольної точки (checkpoint).';
+        THROW 50999, @msg, 1;
+    END
+END;
+GO
+
+-- Застосування staging-даних до таблиці фактів (MERGE) + журнал
+CREATE OR ALTER PROCEDURE etl.usp_SSIS_ApplyFact
+    @Fact         NVARCHAR(50),
+    @ExecutionID  INT,
+    @RowsRead     INT = 0,
+    @RowsRejected INT = 0,
+    @TaskStart    DATETIME = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @i INT = 0, @u INT = 0, @Task NVARCHAR(150);
+    IF @Fact = N'FactVisits'
+        EXEC etl.usp_Load_FactVisits @ExecutionID, @i OUTPUT, @u OUTPUT;
+    ELSE IF @Fact = N'FactPrescriptions'
+        EXEC etl.usp_Load_FactPrescriptions @ExecutionID, @i OUTPUT, @u OUTPUT;
+    ELSE
+        THROW 50204, N'Невідома таблиця фактів для etl.usp_SSIS_ApplyFact.', 1;
+    SET @Task = @Fact + N' (MERGE, SSIS)';
+    EXEC etl.usp_LogTask @ExecutionID, @Task, @RowsRead, @i, @u, @RowsRejected, @TaskStart, NULL;
+END;
+GO
+
+-- Агрегований факт: заміна місяців, обчислених трансформацією Aggregate (stg.DoctorMonthlySummary)
+CREATE OR ALTER PROCEDURE etl.usp_SSIS_ApplyDoctorMonthly
+    @ExecutionID INT,
+    @FullRebuild BIT = 0,
+    @RowsRead    INT = 0,
+    @TaskStart   DATETIME = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    DECLARE @r INT;
+    BEGIN TRAN;
+    IF @FullRebuild = 1
+        DELETE FROM dbo.FactDoctorMonthlySummary;
+    ELSE
+        DELETE s FROM dbo.FactDoctorMonthlySummary s
+        WHERE s.MonthKey IN (SELECT DISTINCT MonthKey FROM stg.DoctorMonthlySummary);
+    INSERT INTO dbo.FactDoctorMonthlySummary (
+        DoctorKey, MonthKey, MonthDateKey, TotalVisitsCount, UniquePatientsCount, FreeNSZUVisitsCount, TotalDurationMinutes,
+        AvgVisitDurationMinutes, MinVisitDurationMinutes, MaxVisitDurationMinutes, TotalRevenueUAH, TotalSickLeaveDaysIssued,
+        WorkingDaysInMonth, VisitsPerWorkingDay, LoadExecutionID)
+    SELECT DoctorKey, MonthKey, MonthDateKey, TotalVisitsCount, UniquePatientsCount, FreeNSZUVisitsCount, TotalDurationMinutes,
+           AvgVisitDurationMinutes, MinVisitDurationMinutes, MaxVisitDurationMinutes, TotalRevenueUAH, TotalSickLeaveDaysIssued,
+           WorkingDaysInMonth, VisitsPerWorkingDay, @ExecutionID
+    FROM stg.DoctorMonthlySummary;
+    SET @r = @@ROWCOUNT;
+    COMMIT;
+    EXEC etl.usp_LogTask @ExecutionID, N'FactDoctorMonthlySummary (Aggregate, SSIS)', @RowsRead, @r, 0, 0, @TaskStart, NULL;
+END;
+GO
+
+-- Архів Філії №2: реєстрація прочитаного файлу (IsLoaded = 0 до успішного MERGE)
+CREATE OR ALTER PROCEDURE etl.usp_RegisterArchiveFile
+    @FileName      NVARCHAR(260),
+    @FileSizeBytes BIGINT,
+    @RowsRead      INT,
+    @ExecutionID   INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    MERGE etl.ProcessedFiles AS t
+    USING (SELECT @FileName AS FileName) AS s ON t.FileName = s.FileName
+    WHEN MATCHED THEN UPDATE SET FileSizeBytes = @FileSizeBytes, RowsRead = @RowsRead, RowsLoaded = 0, RowsRejected = 0,
+                                 ExecutionID = @ExecutionID, ProcessedAt = SYSDATETIME(), IsLoaded = 0, LoadedAt = NULL
+    WHEN NOT MATCHED THEN INSERT (FileName, FileSizeBytes, RowsRead, ExecutionID, IsLoaded)
+                          VALUES (@FileName, @FileSizeBytes, @RowsRead, @ExecutionID, 0);
+END;
+GO
+
+-- Дублікати RecordNo у сирих даних архіву -> карантин (самі дублікати видаляє Sort у Data Flow)
+CREATE OR ALTER PROCEDURE etl.usp_QuarantineArchiveDuplicates
+    @ExecutionID INT,
+    @PackageName NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    ;WITH r AS (
+        SELECT *, ROW_NUMBER() OVER (PARTITION BY UPPER(LTRIM(RTRIM(RecordNo))) ORDER BY SourceFile) AS rn
+        FROM stg.ArchiveVisitRaw
+    )
+    INSERT INTO etl.ErrorRecords (ExecutionID, PackageName, SourceSystem, SourceFile, SourceRecordID, ErrorCode, ErrorColumn, ErrorReason, RawData)
+    SELECT @ExecutionID, @PackageName, N'BRANCH2', SourceFile, RecordNo, N'ERR_DUPLICATE', N'RecordNo',
+           N'Повторний запис з тим самим номером (видалено трансформацією Sort)',
+           LEFT(CONCAT_WS(N';', RecordNo, VisitDateTime, PatientCard, DoctorLicense, ICD10, DurationMin, CostAmount, Currency), 2000)
+    FROM r WHERE rn > 1;
+    SELECT @@ROWCOUNT AS DuplicateRows;
+END;
+GO
+
+-- Підтвердження успішного завантаження файлів архіву поточного запуску
+CREATE OR ALTER PROCEDURE etl.usp_CompleteArchiveFiles
+    @ExecutionID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE pf SET
+        RowsRejected = ISNULL(e.Cnt, 0),
+        RowsLoaded   = pf.RowsRead - ISNULL(e.Cnt, 0),
+        IsLoaded     = 1,
+        LoadedAt     = SYSDATETIME()
+    FROM etl.ProcessedFiles pf
+    OUTER APPLY (SELECT COUNT(*) AS Cnt FROM etl.ErrorRecords er
+                 WHERE er.ExecutionID = @ExecutionID AND er.SourceFile = pf.FileName) e
+    WHERE pf.ExecutionID = @ExecutionID AND pf.IsLoaded = 0;
+END;
+GO
+
+-- Моніторинг: останні запуски ETL з тривалістю (для звіту та скріншотів)
+CREATE OR ALTER VIEW etl.vw_ExecutionHistory
+AS
+SELECT l.ExecutionID, l.ParentExecutionID, l.PackageName, l.LoadType, l.ExecutionStatus,
+       l.StartTime, l.EndTime, DATEDIFF(SECOND, l.StartTime, ISNULL(l.EndTime, SYSDATETIME())) AS DurationSec,
+       l.RowsExtracted, l.RowsInserted, l.RowsUpdated, l.RowsRejected, l.ErrorMessage, l.UserName
+FROM etl.PackageExecutionLog l;
 GO
 
 /* =====================================================================

@@ -117,7 +117,9 @@ CREATE TABLE etl.ErrorRecords (
     LoggedAt       DATETIME2(0) NOT NULL CONSTRAINT DF_ErrorRecords_LoggedAt DEFAULT (SYSDATETIME())
 );
 
--- 1.5 Реєстр оброблених файлів архіву (щоб файл не завантажувався повторно)
+-- 1.5 Реєстр оброблених файлів архіву (щоб файл не завантажувався повторно).
+--     IsLoaded = 1 лише після успішного MERGE у FactVisits: якщо пакет впав між
+--     читанням файлу і завантаженням факту, файл буде прочитано повторно.
 CREATE TABLE etl.ProcessedFiles (
     FileName      NVARCHAR(260) NOT NULL CONSTRAINT PK_ProcessedFiles PRIMARY KEY,
     FileSizeBytes BIGINT NULL,
@@ -125,7 +127,9 @@ CREATE TABLE etl.ProcessedFiles (
     RowsLoaded    INT NOT NULL CONSTRAINT DF_PF_Loaded DEFAULT (0),
     RowsRejected  INT NOT NULL CONSTRAINT DF_PF_Rejected DEFAULT (0),
     ExecutionID   INT NULL,
-    ProcessedAt   DATETIME2(0) NOT NULL CONSTRAINT DF_PF_ProcessedAt DEFAULT (SYSDATETIME())
+    ProcessedAt   DATETIME2(0) NOT NULL CONSTRAINT DF_PF_ProcessedAt DEFAULT (SYSDATETIME()),
+    IsLoaded      BIT NOT NULL CONSTRAINT DF_PF_IsLoaded DEFAULT (0),
+    LoadedAt      DATETIME2(0) NULL
 );
 GO
 
@@ -419,13 +423,13 @@ CREATE TABLE stg.Patient (
     PatientID INT NOT NULL PRIMARY KEY, MedicalCardNumber VARCHAR(20) NOT NULL, TaxCode CHAR(10) NOT NULL,
     FullName NVARCHAR(160) NOT NULL, BirthDate DATE NOT NULL, Gender CHAR(1) NOT NULL, GenderName NVARCHAR(15) NOT NULL,
     BloodType NVARCHAR(15) NOT NULL, DistrictName NVARCHAR(100) NOT NULL, AddressLine NVARCHAR(250) NOT NULL,
-    Phone VARCHAR(20) NOT NULL, RegistrationDate DATE NOT NULL, SourceUpdatedAt DATETIME2(0) NOT NULL);
+    Phone VARCHAR(20) NOT NULL, RegistrationDate DATE NOT NULL, SourceUpdatedAt DATETIME NOT NULL);
 
 CREATE TABLE stg.Doctor (
     DoctorID INT NOT NULL PRIMARY KEY, LicenseNumber VARCHAR(30) NOT NULL, FullName NVARCHAR(160) NOT NULL,
     DepartmentName NVARCHAR(100) NOT NULL, FloorNumber TINYINT NOT NULL, SpecialtyName NVARCHAR(100) NOT NULL,
     StandardConsultMinutes TINYINT NOT NULL, HourlyRate DECIMAL(10,2) NOT NULL, QualificationCategory NVARCHAR(30) NOT NULL,
-    HireDate DATE NOT NULL, DismissalDate DATE NULL, IsActive BIT NOT NULL, SourceUpdatedAt DATETIME2(0) NOT NULL);
+    HireDate DATE NOT NULL, DismissalDate DATE NULL, IsActive BIT NOT NULL, SourceUpdatedAt DATETIME NOT NULL);
 
 CREATE TABLE stg.Disease (
     DiseaseID INT NOT NULL PRIMARY KEY, ICD10Code VARCHAR(10) NOT NULL, ICD10Chapter CHAR(1) NOT NULL,
@@ -446,7 +450,7 @@ CREATE TABLE stg.FactVisits (
     VisitCount TINYINT NOT NULL, AgeAtVisit SMALLINT NOT NULL, DurationMinutes SMALLINT NOT NULL,
     ConsultationCostUAH DECIMAL(10,2) NOT NULL, ConsultationCostEUR DECIMAL(10,2) NOT NULL,
     TreatmentDurationDays SMALLINT NOT NULL, SickLeaveDays SMALLINT NOT NULL, IsRecoveredFlag TINYINT NOT NULL,
-    SourceUpdatedAt DATETIME2(0) NULL,
+    SourceUpdatedAt DATETIME NULL,
     CONSTRAINT PK_stg_FactVisits PRIMARY KEY (SourceSystem, DiagnosisID_Source));
 
 CREATE TABLE stg.FactPrescriptions (
@@ -454,8 +458,18 @@ CREATE TABLE stg.FactPrescriptions (
     DateKey INT NOT NULL, PatientKey INT NOT NULL, DoctorKey INT NOT NULL, DiseaseKey INT NOT NULL, MedicationKey INT NOT NULL,
     AgeGroupKey INT NOT NULL, IsSubsidized BIT NOT NULL, QuantityPackages TINYINT NOT NULL, CourseDurationDays SMALLINT NOT NULL,
     UnitPriceSnapshot DECIMAL(10,2) NOT NULL, TotalMedicationCostUAH DECIMAL(12,2) NOT NULL,
-    SubsidizedAmountUAH DECIMAL(12,2) NOT NULL, PatientPaidUAH DECIMAL(12,2) NOT NULL, SourceUpdatedAt DATETIME2(0) NULL,
+    SubsidizedAmountUAH DECIMAL(12,2) NOT NULL, PatientPaidUAH DECIMAL(12,2) NOT NULL, SourceUpdatedAt DATETIME NULL,
     CONSTRAINT PK_stg_FactPrescriptions PRIMARY KEY (SourceSystem, PrescriptionID_Source));
+
+-- Агрегати завантаженості лікарів, обчислені трансформацією Aggregate у SSIS
+CREATE TABLE stg.DoctorMonthlySummary (
+    DoctorKey INT NOT NULL, MonthKey INT NOT NULL, MonthDateKey INT NOT NULL,
+    TotalVisitsCount INT NOT NULL, UniquePatientsCount INT NOT NULL, FreeNSZUVisitsCount INT NOT NULL,
+    TotalDurationMinutes INT NOT NULL, AvgVisitDurationMinutes DECIMAL(10,2) NOT NULL,
+    MinVisitDurationMinutes SMALLINT NOT NULL, MaxVisitDurationMinutes SMALLINT NOT NULL,
+    TotalRevenueUAH DECIMAL(14,2) NOT NULL, TotalSickLeaveDaysIssued INT NOT NULL,
+    WorkingDaysInMonth TINYINT NOT NULL, VisitsPerWorkingDay DECIMAL(10,2) NOT NULL,
+    CONSTRAINT PK_stg_DoctorMonthlySummary PRIMARY KEY (DoctorKey, MonthKey));
 
 -- Сирі рядки CSV-архіву Філії №2 (усі поля — текст, як у файлі)
 CREATE TABLE stg.ArchiveVisitRaw (

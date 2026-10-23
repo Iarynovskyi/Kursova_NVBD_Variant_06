@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSet Name="DS_Years">
+    <Query>
+      <DataSourceReference>PolyclinicOLAP</DataSourceReference>
+      <CommandText>WITH MEMBER [Measures].[ParamValue] AS [Дата].[Календар].CURRENTMEMBER.UNIQUENAME
+MEMBER [Measures].[ParamCaption] AS [Дата].[Календар].CURRENTMEMBER.MEMBER_CAPTION
+SELECT { [Measures].[ParamValue], [Measures].[ParamCaption] } ON COLUMNS,
+ORDER(NONEMPTY([Дата].[Календар].[Рік].MEMBERS, [Measures].[Кількість візитів]), [Дата].[Календар].CURRENTMEMBER.MEMBERVALUE, BDESC) ON ROWS
+FROM [Polyclinic DW]</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="ParamValue">
+        <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Measure" UniqueName="[Measures].[ParamValue]" /&gt;</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="ParamCaption">
+        <DataField>&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;Field xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Measure" UniqueName="[Measures].[ParamCaption]" /&gt;</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

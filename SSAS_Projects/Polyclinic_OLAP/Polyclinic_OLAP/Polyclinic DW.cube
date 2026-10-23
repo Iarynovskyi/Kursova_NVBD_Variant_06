@@ -1,0 +1,2532 @@
+﻿<Cube xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Polyclinic DW</ID>
+  <Name>Polyclinic DW</Name>
+  <Description>OLAP-куб поліклініки: візити, діагнози, рецепти, завантаженість лікарів (2016–2026)</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Language>1058</Language>
+  <Dimensions>
+    <Dimension>
+      <ID>Date</ID>
+      <Name>Дата</Name>
+      <DimensionID>Dim Date</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Date</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Month</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Quarter</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Month Of Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Day Of Week</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Week Of Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Day Type</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Holiday</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Calendar</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Recovery Date</ID>
+      <Name>Дата результату</Name>
+      <DimensionID>Dim Date</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Date</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Month</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Quarter</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Month Of Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Day Of Week</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Week Of Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Day Type</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Holiday</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Calendar</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Patient</ID>
+      <Name>Пацієнт</Name>
+      <DimensionID>Dim Patient</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Patient Version</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Patient</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>District</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Gender</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Birth Year</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Blood Type</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Current Version</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Medical Card</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Address</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Phone</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Registration Date</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Valid From</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Valid To</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Geography</HierarchyID>
+        </Hierarchy>
+        <Hierarchy>
+          <HierarchyID>Demography</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Doctor</ID>
+      <Name>Лікар</Name>
+      <DimensionID>Dim Doctor</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Doctor Version</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Doctor</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Specialty</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Department</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Category</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Status</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Current Version</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Hourly Rate</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Floor</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Standard Minutes</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>License</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Hire Date</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Structure</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Disease</ID>
+      <Name>Хвороба</Name>
+      <DimensionID>Dim Disease</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Disease</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Chapter</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Category</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Course</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Profile Specialty</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>ICD10 Code</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>ICD10</HierarchyID>
+        </Hierarchy>
+        <Hierarchy>
+          <HierarchyID>Categories</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Medication</ID>
+      <Name>Лікарський засіб</Name>
+      <DimensionID>Dim Medication</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Medication</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Substance</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Pharm Group</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Manufacturer</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Country</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Price Category</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Release Form</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Origin</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Unit Price</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Pharmacology</HierarchyID>
+        </Hierarchy>
+        <Hierarchy>
+          <HierarchyID>Manufacturers</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Age Group</ID>
+      <Name>Вікова група</Name>
+      <DimensionID>Dim Age Group</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Age Group</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+    <Dimension>
+      <ID>Outcome</ID>
+      <Name>Клінічний результат</Name>
+      <DimensionID>Dim Clinical Outcome</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Outcome</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Visit Type</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Severity</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Severity Order</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Treatment Outcome</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Outcome Group</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Recovered</AttributeID>
+        </Attribute>
+        <Attribute>
+          <AttributeID>Closed</AttributeID>
+        </Attribute>
+      </Attributes>
+      <Hierarchies>
+        <Hierarchy>
+          <HierarchyID>Results</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
+    </Dimension>
+    <Dimension>
+      <ID>Source System</ID>
+      <Name>Джерело даних</Name>
+      <DimensionID>Dim Source System</DimensionID>
+      <Attributes>
+        <Attribute>
+          <AttributeID>Source System</AttributeID>
+        </Attribute>
+      </Attributes>
+    </Dimension>
+  </Dimensions>
+  <MeasureGroups>
+    <MeasureGroup>
+      <ID>Visits</ID>
+      <Name>Візити</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure>
+          <ID>Visit Count</ID>
+          <Name>Кількість візитів</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>VisitCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Diagnosis Count</ID>
+          <Name>Кількість діагнозів</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>dbo_FactVisits</TableID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Duration Minutes</ID>
+          <Name>Тривалість прийомів у хв</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>DurationMinutes</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Consultation Cost UAH</ID>
+          <Name>Вартість консультацій у грн</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>ConsultationCostUAH</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Consultation Cost EUR</ID>
+          <Name>Вартість консультацій у EUR</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>ConsultationCostEUR</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Sick Leave Days</ID>
+          <Name>Дні лікарняних</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>SickLeaveDays</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Treatment Days</ID>
+          <Name>Дні лікування</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>TreatmentDurationDays</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Recovered Cases</ID>
+          <Name>Випадків з одужанням</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>IsRecoveredFlag</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Closed Cases</ID>
+          <Name>Завершених випадків</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>ClosedCaseFlag</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Free Visits</ID>
+          <Name>Безкоштовних візитів НСЗУ</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactVisits</TableID>
+              <ColumnID>FreeVisitCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>DateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Recovery Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>RecoveryDateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Patient</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Patient Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>PatientKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Doctor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Doctor Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>DoctorKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Disease</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Disease</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>DiseaseKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Age Group</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Age Group</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>AgeGroupKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Outcome</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Outcome</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>OutcomeKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Source System</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Source System</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>WChar</DataType>
+                  <DataSize>20</DataSize>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactVisits</TableID>
+                    <ColumnID>SourceSystem</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <EstimatedRows>613801</EstimatedRows>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Unique Patients</ID>
+      <Name>Унікальні пацієнти</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure>
+          <ID>Unique Patients</ID>
+          <Name>Унікальних пацієнтів</Name>
+          <AggregateFunction>DistinctCount</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>NQ_FactVisitsPatients</TableID>
+              <ColumnID>PatientID_Source</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>DateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Recovery Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>RecoveryDateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Patient</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Patient Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>PatientKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Doctor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Doctor Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>DoctorKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Disease</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Disease</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>DiseaseKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Age Group</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Age Group</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>AgeGroupKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Outcome</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Outcome</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>OutcomeKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Source System</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Source System</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>WChar</DataType>
+                  <DataSize>20</DataSize>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>NQ_FactVisitsPatients</TableID>
+                    <ColumnID>SourceSystem</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <EstimatedRows>613801</EstimatedRows>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Prescriptions</ID>
+      <Name>Рецепти</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure>
+          <ID>Prescription Count</ID>
+          <Name>Кількість рецептів</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>PrescriptionCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Packages</ID>
+          <Name>Упаковок</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>QuantityPackages</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Course Days</ID>
+          <Name>Днів курсу лікування</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>CourseDurationDays</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Medication Cost UAH</ID>
+          <Name>Вартість ліків у грн</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>TotalMedicationCostUAH</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Subsidized Amount UAH</ID>
+          <Name>Компенсація держави у грн</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>SubsidizedAmountUAH</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Patient Paid UAH</ID>
+          <Name>Доплата пацієнтів у грн</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>PatientPaidUAH</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Min Unit Price</ID>
+          <Name>Мінімальна ціна упаковки у грн</Name>
+          <AggregateFunction>Min</AggregateFunction>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>UnitPriceSnapshot</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Max Unit Price</ID>
+          <Name>Максимальна ціна упаковки у грн</Name>
+          <AggregateFunction>Max</AggregateFunction>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>UnitPriceSnapshot</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Subsidized Count</ID>
+          <Name>Пільгових рецептів</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactPrescriptions</TableID>
+              <ColumnID>SubsidizedCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>DateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Patient</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Patient Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>PatientKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Doctor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Doctor Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>DoctorKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Disease</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Disease</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>DiseaseKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Medication</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Medication</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>MedicationKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Age Group</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Age Group</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>AgeGroupKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Source System</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Source System</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>WChar</DataType>
+                  <DataSize>20</DataSize>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactPrescriptions</TableID>
+                    <ColumnID>SourceSystem</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <EstimatedRows>607836</EstimatedRows>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Doctor Workload</ID>
+      <Name>Завантаженість лікарів</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure>
+          <ID>Monthly Visits</ID>
+          <Name>Візитів за місяць</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>TotalVisitsCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Monthly Free Visits</ID>
+          <Name>Безкоштовних НСЗУ за місяць</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>FreeNSZUVisitsCount</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Monthly Duration</ID>
+          <Name>Тривалість прийомів за місяць у хв</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>TotalDurationMinutes</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Min Visit Duration</ID>
+          <Name>Мінімальна тривалість прийому у хв</Name>
+          <AggregateFunction>Min</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>MinVisitDurationMinutes</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Max Visit Duration</ID>
+          <Name>Максимальна тривалість прийому у хв</Name>
+          <AggregateFunction>Max</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>MaxVisitDurationMinutes</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Monthly Revenue</ID>
+          <Name>Дохід за місяць у грн</Name>
+          <DataType>Double</DataType>
+          <Source>
+            <DataType>Double</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>TotalRevenueUAH</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0.00</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Monthly Sick Days</ID>
+          <Name>Днів лікарняних за місяць</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+              <ColumnID>TotalSickLeaveDaysIssued</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Doctor Months</ID>
+          <Name>Лікаре-місяців</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>dbo_FactDoctorMonthlySummary</TableID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Month</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactDoctorMonthlySummary</TableID>
+                    <ColumnID>MonthKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Doctor</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Doctor Version</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_FactDoctorMonthlySummary</TableID>
+                    <ColumnID>DoctorKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <EstimatedRows>54096</EstimatedRows>
+    </MeasureGroup>
+    <MeasureGroup>
+      <ID>Calendar</ID>
+      <Name>Календар</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+      <State>Unprocessed</State>
+      <Measures>
+        <Measure>
+          <ID>Working Days</ID>
+          <Name>Робочих днів</Name>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <Source xsi:type="ColumnBinding">
+              <TableID>dbo_DimDate</TableID>
+              <ColumnID>IsWorkingDay</ColumnID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+        <Measure>
+          <ID>Calendar Days</ID>
+          <Name>Календарних днів</Name>
+          <AggregateFunction>Count</AggregateFunction>
+          <DataType>Integer</DataType>
+          <Source>
+            <DataType>Integer</DataType>
+            <DataSize>4</DataSize>
+            <Source xsi:type="RowBinding">
+              <TableID>dbo_DimDate</TableID>
+            </Source>
+          </Source>
+          <FormatString>#,##0</FormatString>
+        </Measure>
+      </Measures>
+      <StorageMode>Molap</StorageMode>
+      <ProcessingMode>Regular</ProcessingMode>
+      <Dimensions>
+        <Dimension xsi:type="RegularMeasureGroupDimension">
+          <CubeDimensionID>Date</CubeDimensionID>
+          <Attributes>
+            <Attribute>
+              <AttributeID>Date</AttributeID>
+              <KeyColumns>
+                <KeyColumn>
+                  <DataType>Integer</DataType>
+                  <Source xsi:type="ColumnBinding">
+                    <TableID>dbo_DimDate</TableID>
+                    <ColumnID>DateKey</ColumnID>
+                  </Source>
+                </KeyColumn>
+              </KeyColumns>
+              <Type>Granularity</Type>
+            </Attribute>
+          </Attributes>
+        </Dimension>
+      </Dimensions>
+      <EstimatedRows>5845</EstimatedRows>
+    </MeasureGroup>
+  </MeasureGroups>
+  <Source>
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <MdxScripts>
+    <MdxScript>
+      <ID>MdxScript</ID>
+      <Name>MdxScript</Name>
+      <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+      <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+      <Commands>
+        <Command>
+          <Text>/*
+            MDX-скрипт куба Polyclinic DW (курсова НВБД, варіант 6 «Поліклініка»).
+            CALCULATE агрегує листові комірки куба — не видаляти.
+            */
+            CALCULATE;
+            /* ===== Обчислювані члени вимірів ===== */
+            CREATE MEMBER CURRENTCUBE.[Пацієнт].[Рік народження].[Усі].[Пенсійного віку (народжені до 1962 року)]
+            AS AGGREGATE(FILTER([Пацієнт].[Рік народження].[Рік народження].MEMBERS, [Пацієнт].[Рік народження].CURRENTMEMBER.MEMBERVALUE &lt;= 1961)),
+            VISIBLE = 1;
+            CREATE MEMBER CURRENTCUBE.[Вікова група].[Вікова група].[Усі].[Дорослі від 18 років]
+            AS AGGREGATE(FILTER([Вікова група].[Вікова група].[Вікова група].MEMBERS, [Вікова група].[Вікова група].CURRENTMEMBER.PROPERTIES(&quot;KEY&quot;, TYPED) &gt;= 2)),
+            VISIBLE = 1;
+            /* ===== Іменовані набори (Ranking, Top-N) ===== */
+            CREATE DYNAMIC SET CURRENTCUBE.[Лікарі за кількістю візитів]
+            AS ORDER([Лікар].[Лікар].[Лікар].MEMBERS, [Measures].[Кількість візитів], BDESC);
+            CREATE DYNAMIC SET CURRENTCUBE.[Топ-10 лікарів за візитами]
+            AS TOPCOUNT([Лікар].[Лікар].[Лікар].MEMBERS, 10, [Measures].[Кількість візитів]);
+            CREATE DYNAMIC SET CURRENTCUBE.[Топ-10 хвороб за кількістю випадків]
+            AS TOPCOUNT([Хвороба].[Хвороба].[Хвороба].MEMBERS, 10, [Measures].[Кількість діагнозів]);
+            CREATE DYNAMIC SET CURRENTCUBE.[Топ-10 препаратів за вартістю]
+            AS TOPCOUNT([Лікарський засіб].[Препарат].[Препарат].MEMBERS, 10, [Measures].[Вартість ліків у грн]);
+            /* ===== Обчислювані міри: середні, частки, Time Intelligence (YTD, PY, YoY), ковзне середнє, рейтинги, бізнес-метрики ===== */
+            CREATE MEMBER CURRENTCUBE.[Measures].[Середня тривалість прийому у хв]
+            AS IIF([Measures].[Кількість візитів] = 0, NULL, [Measures].[Тривалість прийомів у хв] / [Measures].[Кількість візитів]),
+            FORMAT_STRING = &quot;#,##0.0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Середні значення', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Середня вартість платного прийому у грн]
+            AS IIF([Measures].[Кількість візитів] - [Measures].[Безкоштовних візитів НСЗУ] = 0, NULL,
+            [Measures].[Вартість консультацій у грн] / ([Measures].[Кількість візитів] - [Measures].[Безкоштовних візитів НСЗУ])),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Середні значення', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Середня тривалість лікування у днях]
+            AS IIF([Measures].[Завершених випадків] = 0, NULL, [Measures].[Дні лікування] / [Measures].[Завершених випадків]),
+            FORMAT_STRING = &quot;#,##0.0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Середні значення', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Лікарняних на діагноз у днях]
+            AS IIF([Measures].[Кількість діагнозів] = 0, NULL, [Measures].[Дні лікарняних] / [Measures].[Кількість діагнозів]),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Середні значення', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка одужань]
+            AS IIF([Measures].[Завершених випадків] = 0, NULL, [Measures].[Випадків з одужанням] / [Measures].[Завершених випадків]),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Ефективність лікування', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка безкоштовних візитів НСЗУ]
+            AS IIF([Measures].[Кількість візитів] = 0, NULL, [Measures].[Безкоштовних візитів НСЗУ] / [Measures].[Кількість візитів]),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Частки', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка хвороби у візитах]
+            AS IIF(([Measures].[Кількість діагнозів], ROOT([Хвороба])) = 0, NULL,
+            [Measures].[Кількість діагнозів] / ([Measures].[Кількість діагнозів], ROOT([Хвороба]))),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Частки', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка лікаря у візитах]
+            AS IIF(([Measures].[Кількість візитів], ROOT([Лікар])) = 0, NULL,
+            [Measures].[Кількість візитів] / ([Measures].[Кількість візитів], ROOT([Лікар]))),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Частки', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Візити з початку року (YTD)]
+            AS IIF([Дата].[Календар].CURRENTMEMBER.LEVEL.ORDINAL = 0, NULL,
+            AGGREGATE(YTD([Дата].[Календар].CURRENTMEMBER), [Measures].[Кількість візитів])),
+            FORMAT_STRING = &quot;#,##0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Візити попереднього року (PY)]
+            AS ([Measures].[Кількість візитів], PARALLELPERIOD([Дата].[Календар].[Рік], 1, [Дата].[Календар].CURRENTMEMBER)),
+            FORMAT_STRING = &quot;#,##0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Приріст візитів YoY]
+            AS IIF(ISEMPTY([Measures].[Візити попереднього року (PY)]) OR [Measures].[Візити попереднього року (PY)] = 0, NULL,
+            ([Measures].[Кількість візитів] - [Measures].[Візити попереднього року (PY)]) / [Measures].[Візити попереднього року (PY)]),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Вартість консультацій YTD у грн]
+            AS IIF([Дата].[Календар].CURRENTMEMBER.LEVEL.ORDINAL = 0, NULL,
+            AGGREGATE(YTD([Дата].[Календар].CURRENTMEMBER), [Measures].[Вартість консультацій у грн])),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Вартість консультацій PY у грн]
+            AS ([Measures].[Вартість консультацій у грн], PARALLELPERIOD([Дата].[Календар].[Рік], 1, [Дата].[Календар].CURRENTMEMBER)),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Приріст вартості консультацій YoY]
+            AS IIF(ISEMPTY([Measures].[Вартість консультацій PY у грн]) OR [Measures].[Вартість консультацій PY у грн] = 0, NULL,
+            ([Measures].[Вартість консультацій у грн] - [Measures].[Вартість консультацій PY у грн]) / [Measures].[Вартість консультацій PY у грн]),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка одужань PY]
+            AS ([Measures].[Частка одужань], PARALLELPERIOD([Дата].[Календар].[Рік], 1, [Дата].[Календар].CURRENTMEMBER)),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Ефективність лікування', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Ковзне середнє візитів (3 періоди)]
+            AS IIF([Дата].[Календар].CURRENTMEMBER.LEVEL.ORDINAL = 0, NULL,
+            AVG(LASTPERIODS(3, [Дата].[Календар].CURRENTMEMBER), [Measures].[Кількість візитів])),
+            FORMAT_STRING = &quot;#,##0.0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Аналіз у часі', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Рейтинг лікаря за візитами]
+            AS IIF([Лікар].[Лікар].CURRENTMEMBER.LEVEL.ORDINAL = 0 OR ISEMPTY([Measures].[Кількість візитів]), NULL,
+            RANK([Лікар].[Лікар].CURRENTMEMBER, [Лікарі за кількістю візитів])),
+            FORMAT_STRING = &quot;#,##0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Рейтинги', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Рейтинг хвороби]
+            AS IIF([Хвороба].[Хвороба].CURRENTMEMBER.LEVEL.ORDINAL = 0 OR ISEMPTY([Measures].[Кількість діагнозів]), NULL,
+            RANK([Хвороба].[Хвороба].CURRENTMEMBER, ORDER([Хвороба].[Хвороба].[Хвороба].MEMBERS, [Measures].[Кількість діагнозів], BDESC))),
+            FORMAT_STRING = &quot;#,##0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Рейтинги', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Дохід на годину прийому у грн]
+            AS IIF([Measures].[Тривалість прийомів у хв] = 0, NULL,
+            [Measures].[Вартість консультацій у грн] / ([Measures].[Тривалість прийомів у хв] / 60)),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Візити';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Візитів на робочий день]
+            AS IIF([Measures].[Робочих днів] = 0, NULL, [Measures].[Візитів за місяць] / [Measures].[Робочих днів]),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Завантаженість лікарів';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Візитів на лікаря за місяць]
+            AS IIF([Measures].[Лікаре-місяців] = 0, NULL, [Measures].[Візитів за місяць] / [Measures].[Лікаре-місяців]),
+            FORMAT_STRING = &quot;#,##0.0&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Завантаженість лікарів';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Частка компенсації ліків]
+            AS IIF([Measures].[Вартість ліків у грн] = 0, NULL, [Measures].[Компенсація держави у грн] / [Measures].[Вартість ліків у грн]),
+            FORMAT_STRING = &quot;0.0%&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Рецепти';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Вартість ліків на пацієнта у грн]
+            AS IIF([Measures].[Унікальних пацієнтів] = 0, NULL, [Measures].[Вартість ліків у грн] / [Measures].[Унікальних пацієнтів]),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Рецепти';
+            CREATE MEMBER CURRENTCUBE.[Measures].[Рецептів на діагноз]
+            AS IIF([Measures].[Кількість діагнозів] = 0, NULL, [Measures].[Кількість рецептів] / [Measures].[Кількість діагнозів]),
+            FORMAT_STRING = &quot;#,##0.00&quot;,
+            VISIBLE = 1, DISPLAY_FOLDER = 'Бізнес-метрики', ASSOCIATED_MEASURE_GROUP = 'Рецепти';
+          </Text>
+        </Command>
+      </Commands>
+      <CalculationProperties>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Середня тривалість прийому у хв]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Середні значення</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Середня вартість платного прийому у грн]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Середні значення</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Середня тривалість лікування у днях]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Середні значення</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Лікарняних на діагноз у днях]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Середні значення</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка одужань]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Ефективність лікування</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка безкоштовних візитів НСЗУ]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Частки</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка хвороби у візитах]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Частки</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка лікаря у візитах]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Частки</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Візити з початку року (YTD)]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Візити попереднього року (PY)]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Приріст візитів YoY]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Вартість консультацій YTD у грн]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Вартість консультацій PY у грн]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Приріст вартості консультацій YoY]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка одужань PY]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Ефективність лікування</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Ковзне середнє візитів (3 періоди)]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Аналіз у часі</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Рейтинг лікаря за візитами]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Рейтинги</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Рейтинг хвороби]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Рейтинги</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Дохід на годину прийому у грн]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Візитів на робочий день]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Doctor Workload</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Візитів на лікаря за місяць]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Doctor Workload</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.0"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Частка компенсації ліків]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Prescriptions</AssociatedMeasureGroupID>
+          <FormatString>"0.0%"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Вартість ліків на пацієнта у грн]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Prescriptions</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Measures].[Рецептів на діагноз]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+          <DisplayFolder>Бізнес-метрики</DisplayFolder>
+          <AssociatedMeasureGroupID>Prescriptions</AssociatedMeasureGroupID>
+          <FormatString>"#,##0.00"</FormatString>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Лікарі за кількістю візитів]</CalculationReference>
+          <CalculationType>Set</CalculationType>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Топ-10 лікарів за візитами]</CalculationReference>
+          <CalculationType>Set</CalculationType>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Топ-10 хвороб за кількістю випадків]</CalculationReference>
+          <CalculationType>Set</CalculationType>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Топ-10 препаратів за вартістю]</CalculationReference>
+          <CalculationType>Set</CalculationType>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Пацієнт].[Рік народження].[Усі].[Пенсійного віку (народжені до 1962 року)]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>[Вікова група].[Вікова група].[Усі].[Дорослі від 18 років]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+          <Visible>true</Visible>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>KPIs.[Ефективність лікування]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+        </CalculationProperty>
+        <CalculationProperty>
+          <CalculationReference>KPIs.[Дохід від консультацій]</CalculationReference>
+          <CalculationType>Member</CalculationType>
+        </CalculationProperty>
+      </CalculationProperties>
+    </MdxScript>
+  </MdxScripts>
+  <Kpis>
+    <Kpi>
+      <ID>Treatment Effectiveness</ID>
+      <Name>Ефективність лікування</Name>
+      <Description>Частка завершених випадків з одужанням або покращенням; ціль поліклініки — 70%</Description>
+      <DisplayFolder>Клінічні</DisplayFolder>
+      <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+      <Value>[Measures].[Частка одужань]</Value>
+      <Goal>0.70</Goal>
+      <Status>CASE
+        WHEN ISEMPTY(KPIVALUE(&quot;Ефективність лікування&quot;)) THEN NULL
+        WHEN KPIVALUE(&quot;Ефективність лікування&quot;) &gt;= KPIGOAL(&quot;Ефективність лікування&quot;) THEN 1
+        WHEN KPIVALUE(&quot;Ефективність лікування&quot;) &gt;= KPIGOAL(&quot;Ефективність лікування&quot;) - 0.07 THEN 0
+        ELSE -1
+        END</Status>
+        <Trend>CASE
+          WHEN ISEMPTY([Measures].[Частка одужань PY]) THEN 0
+          WHEN [Measures].[Частка одужань] &gt; [Measures].[Частка одужань PY] THEN 1
+          WHEN [Measures].[Частка одужань] &lt; [Measures].[Частка одужань PY] THEN -1
+          ELSE 0
+          END</Trend>
+          <StatusGraphic>Traffic Light</StatusGraphic>
+          <TrendGraphic>Standard Arrow</TrendGraphic>
+        </Kpi>
+        <Kpi>
+          <ID>Consultation Revenue</ID>
+          <Name>Дохід від консультацій</Name>
+          <Description>Вартість консультацій проти цілі: +5% до попереднього року</Description>
+          <DisplayFolder>Фінансові</DisplayFolder>
+          <AssociatedMeasureGroupID>Visits</AssociatedMeasureGroupID>
+          <Value>[Measures].[Вартість консультацій у грн]</Value>
+          <Goal>[Measures].[Вартість консультацій PY у грн] * 1.05</Goal>
+          <Status>CASE
+            WHEN ISEMPTY(KPIGOAL(&quot;Дохід від консультацій&quot;)) OR KPIGOAL(&quot;Дохід від консультацій&quot;) = 0 THEN NULL
+            WHEN KPIVALUE(&quot;Дохід від консультацій&quot;) &gt;= KPIGOAL(&quot;Дохід від консультацій&quot;) THEN 1
+            WHEN KPIVALUE(&quot;Дохід від консультацій&quot;) &gt;= KPIGOAL(&quot;Дохід від консультацій&quot;) * 0.95 THEN 0
+            ELSE -1
+            END</Status>
+            <Trend>CASE
+              WHEN ISEMPTY([Measures].[Приріст вартості консультацій YoY]) THEN 0
+              WHEN [Measures].[Приріст вартості консультацій YoY] &gt; 0 THEN 1
+              WHEN [Measures].[Приріст вартості консультацій YoY] &lt; 0 THEN -1
+              ELSE 0
+              END</Trend>
+              <StatusGraphic>Gauge - Ascending</StatusGraphic>
+              <TrendGraphic>Standard Arrow</TrendGraphic>
+            </Kpi>
+          </Kpis>
+          <Perspectives>
+            <Perspective>
+              <ID>Doctor Workload</ID>
+              <Name>Завантаженість лікарів</Name>
+              <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+              <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+              <Dimensions>
+                <Dimension>
+                  <CubeDimensionID>Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Quarter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Of Week</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Week Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Holiday</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Calendar</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Doctor</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Doctor Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Doctor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Specialty</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Department</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Status</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Current Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hourly Rate</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Floor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Standard Minutes</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>License</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hire Date</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Structure</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+              </Dimensions>
+              <MeasureGroups>
+                <MeasureGroup>
+                  <MeasureGroupID>Doctor Workload</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Monthly Visits</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Monthly Free Visits</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Monthly Duration</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Min Visit Duration</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Max Visit Duration</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Monthly Revenue</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Monthly Sick Days</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Doctor Months</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+                <MeasureGroup>
+                  <MeasureGroupID>Calendar</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Working Days</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Calendar Days</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+                <MeasureGroup>
+                  <MeasureGroupID>Visits</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Visit Count</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Duration Minutes</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Consultation Cost UAH</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Free Visits</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+              </MeasureGroups>
+              <Calculations>
+                <Calculation>
+                  <Name>[Measures].[Візитів на робочий день]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Візитів на лікаря за місяць]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Рейтинг лікаря за візитами]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Частка лікаря у візитах]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Середня тривалість прийому у хв]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Дохід на годину прийому у грн]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Вартість консультацій PY у грн]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Приріст вартості консультацій YoY]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Лікарі за кількістю візитів]</Name>
+                  <Type>Set</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Топ-10 лікарів за візитами]</Name>
+                  <Type>Set</Type>
+                </Calculation>
+              </Calculations>
+              <Kpis>
+                <Kpi>
+                  <KpiID>Consultation Revenue</KpiID>
+                </Kpi>
+              </Kpis>
+            </Perspective>
+            <Perspective>
+              <ID>Clinical Analytics</ID>
+              <Name>Клінічна аналітика</Name>
+              <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+              <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+              <Dimensions>
+                <Dimension>
+                  <CubeDimensionID>Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Quarter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Of Week</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Week Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Holiday</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Calendar</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Recovery Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Quarter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Of Week</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Week Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Holiday</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Calendar</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Patient</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Patient Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Patient</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>District</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Gender</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Birth Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Blood Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Current Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Medical Card</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Address</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Phone</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Registration Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Valid From</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Valid To</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Geography</HierarchyID>
+                    </Hierarchy>
+                    <Hierarchy>
+                      <HierarchyID>Demography</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Doctor</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Doctor Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Doctor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Specialty</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Department</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Status</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Current Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hourly Rate</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Floor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Standard Minutes</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>License</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hire Date</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Structure</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Disease</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Disease</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Chapter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Course</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Profile Specialty</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>ICD10 Code</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>ICD10</HierarchyID>
+                    </Hierarchy>
+                    <Hierarchy>
+                      <HierarchyID>Categories</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Age Group</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Age Group</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Outcome</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Outcome</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Visit Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Severity</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Severity Order</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Treatment Outcome</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Outcome Group</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Recovered</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Closed</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Results</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Source System</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Source System</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+              </Dimensions>
+              <MeasureGroups>
+                <MeasureGroup>
+                  <MeasureGroupID>Visits</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Visit Count</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Diagnosis Count</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Duration Minutes</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Consultation Cost UAH</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Consultation Cost EUR</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Sick Leave Days</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Treatment Days</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Recovered Cases</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Closed Cases</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Free Visits</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+                <MeasureGroup>
+                  <MeasureGroupID>Unique Patients</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Unique Patients</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+              </MeasureGroups>
+              <Calculations>
+                <Calculation>
+                  <Name>[Measures].[Частка одужань]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Частка одужань PY]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Середня тривалість лікування у днях]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Лікарняних на діагноз у днях]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Частка хвороби у візитах]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Візити з початку року (YTD)]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Візити попереднього року (PY)]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Приріст візитів YoY]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Ковзне середнє візитів (3 періоди)]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Рейтинг хвороби]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Середня тривалість прийому у хв]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Топ-10 хвороб за кількістю випадків]</Name>
+                  <Type>Set</Type>
+                </Calculation>
+              </Calculations>
+              <Kpis>
+                <Kpi>
+                  <KpiID>Treatment Effectiveness</KpiID>
+                </Kpi>
+              </Kpis>
+            </Perspective>
+            <Perspective>
+              <ID>Pharmacy</ID>
+              <Name>Фармація</Name>
+              <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+              <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+              <Dimensions>
+                <Dimension>
+                  <CubeDimensionID>Date</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Quarter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Month Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Of Week</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Week Of Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Day Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Holiday</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Calendar</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Medication</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Medication</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Substance</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Pharm Group</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Manufacturer</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Country</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Price Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Release Form</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Origin</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Unit Price</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Pharmacology</HierarchyID>
+                    </Hierarchy>
+                    <Hierarchy>
+                      <HierarchyID>Manufacturers</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Disease</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Disease</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Chapter</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Course</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Profile Specialty</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>ICD10 Code</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>ICD10</HierarchyID>
+                    </Hierarchy>
+                    <Hierarchy>
+                      <HierarchyID>Categories</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Age Group</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Age Group</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Patient</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Patient Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Patient</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>District</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Gender</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Birth Year</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Blood Type</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Current Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Medical Card</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Address</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Phone</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Registration Date</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Valid From</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Valid To</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Geography</HierarchyID>
+                    </Hierarchy>
+                    <Hierarchy>
+                      <HierarchyID>Demography</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+                <Dimension>
+                  <CubeDimensionID>Doctor</CubeDimensionID>
+                  <Attributes>
+                    <Attribute>
+                      <AttributeID>Doctor Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Doctor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Specialty</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Department</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Category</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Status</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Current Version</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hourly Rate</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Floor</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Standard Minutes</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>License</AttributeID>
+                    </Attribute>
+                    <Attribute>
+                      <AttributeID>Hire Date</AttributeID>
+                    </Attribute>
+                  </Attributes>
+                  <Hierarchies>
+                    <Hierarchy>
+                      <HierarchyID>Structure</HierarchyID>
+                    </Hierarchy>
+                  </Hierarchies>
+                </Dimension>
+              </Dimensions>
+              <MeasureGroups>
+                <MeasureGroup>
+                  <MeasureGroupID>Prescriptions</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Prescription Count</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Packages</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Course Days</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Medication Cost UAH</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Subsidized Amount UAH</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Patient Paid UAH</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Min Unit Price</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Max Unit Price</MeasureID>
+                    </Measure>
+                    <Measure>
+                      <MeasureID>Subsidized Count</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+                <MeasureGroup>
+                  <MeasureGroupID>Unique Patients</MeasureGroupID>
+                  <Measures>
+                    <Measure>
+                      <MeasureID>Unique Patients</MeasureID>
+                    </Measure>
+                  </Measures>
+                </MeasureGroup>
+              </MeasureGroups>
+              <Calculations>
+                <Calculation>
+                  <Name>[Measures].[Частка компенсації ліків]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Вартість ліків на пацієнта у грн]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Measures].[Рецептів на діагноз]</Name>
+                  <Type>Member</Type>
+                </Calculation>
+                <Calculation>
+                  <Name>[Топ-10 препаратів за вартістю]</Name>
+                  <Type>Set</Type>
+                </Calculation>
+              </Calculations>
+            </Perspective>
+          </Perspectives>
+        </Cube>

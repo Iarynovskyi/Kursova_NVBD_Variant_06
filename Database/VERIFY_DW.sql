@@ -7,8 +7,10 @@
      D. Інкрементальний сценарій у транзакції з ROLLBACK (дані не змінюються):
         зміна адреси пацієнта (SCD2), категорії лікаря (SCD2), закриття випадку,
         новий візит + рецепт -> інкрементальний ETL -> перевірки -> відкат
-     E. Підсумок PASS / FAIL (RAISERROR при помилках)
-   Передумова: виконано RUN_ETL_PIPELINE.sql (повне завантаження).
+     E. SSIS: архів Філії №2 (повнота, карантин помилок, ключі) та журнал Master
+     F. Підсумок PASS / FAIL (RAISERROR при помилках)
+   Передумова: повне завантаження пакетом Master.dtsx (SSIS_Projects/RUN_SSIS_CATALOG.sql)
+               або RUN_ETL_PIPELINE.sql (T-SQL-резерв; тоді розділ E не застосовний).
    ===================================================================== */
 
 USE PolyclinicDW;
@@ -239,7 +241,34 @@ VALUES (N'D. Інкремент', N'Після ROLLBACK тестові змін�
 GO
 
 /* ---------------------------------------------------------------------
-   E. ПІДСУМОК
+   E. SSIS: архів Філії №2 (BRANCH2) та журнал запусків пакетів
+   --------------------------------------------------------------------- */
+DECLARE @raw INT = 40044,   -- рядків у 10 CSV-файлах архіву (див. DataGeneration/BranchArchive/README.md)
+        @fb INT, @eb INT, @a INT;
+SELECT @fb = COUNT(*) FROM dbo.FactVisits WHERE SourceSystem = N'BRANCH2';
+SELECT @eb = COUNT(*) FROM etl.ErrorRecords e
+WHERE e.SourceSystem = N'BRANCH2'
+  AND e.ExecutionID = (SELECT MAX(ExecutionID) FROM etl.ErrorRecords WHERE SourceSystem = N'BRANCH2');
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Архів: завантажено + відхилено (у т.ч. дублікати) = рядків у CSV',
+                            CAST(@raw AS NVARCHAR(20)), CONCAT(@fb, N' + ', @eb), IIF(@fb + @eb = @raw AND @fb > 0, 1, 0));
+SELECT @a = COUNT(*) FROM etl.ProcessedFiles WHERE IsLoaded = 1;
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Файли архіву зареєстровано як завантажені', N'10', CAST(@a AS NVARCHAR(20)), IIF(@a = 10, 1, 0));
+SELECT @a = COUNT(*) FROM dbo.FactVisits WHERE SourceSystem = N'BRANCH2' AND -1 IN (PatientKey, DoctorKey, DiseaseKey, AgeGroupKey, OutcomeKey);
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Факти архіву з невідомими ключами (-1)', N'0', CAST(@a AS NVARCHAR(20)), IIF(@a = 0, 1, 0));
+SELECT @a = COUNT(*) FROM dbo.FactVisits WHERE SourceSystem = N'BRANCH2' AND (DurationMinutes NOT BETWEEN 5 AND 180 OR ConsultationCostUAH < 0);
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Факти архіву з некоректною тривалістю/вартістю після очищення', N'0', CAST(@a AS NVARCHAR(20)), IIF(@a = 0, 1, 0));
+SELECT @a = COUNT(DISTINCT ErrorCode) FROM etl.ErrorRecords WHERE SourceSystem = N'BRANCH2';
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Типи помилок архіву в карантині (дублікати, формат, тривалість, картка, ліцензія, МКХ)', N'>= 6', CAST(@a AS NVARCHAR(20)), IIF(@a >= 6, 1, 0));
+SELECT @a = COUNT(*) FROM etl.PackageExecutionLog WHERE PackageName = N'Master' AND ExecutionStatus = N'Success';
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Успішний запуск пакета Master у журналі ETL', N'>= 1', CAST(@a AS NVARCHAR(20)), IIF(@a >= 1, 1, 0));
+SELECT @a = COUNT(*) FROM etl.PackageExecutionLog c
+WHERE c.ParentExecutionID = (SELECT MAX(ExecutionID) FROM etl.PackageExecutionLog WHERE PackageName = N'Master' AND ExecutionStatus = N'Success')
+  AND c.ExecutionStatus = N'Success';
+INSERT INTO #Checks VALUES (N'E. SSIS', N'Дочірні пакети останнього Master завершені успішно', N'5', CAST(@a AS NVARCHAR(20)), IIF(@a = 5, 1, 0));
+GO
+
+/* ---------------------------------------------------------------------
+   F. ПІДСУМОК
    --------------------------------------------------------------------- */
 SELECT CheckID, CheckGroup, CheckName, Expected, Actual, Status FROM #Checks ORDER BY CheckID;
 

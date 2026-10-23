@@ -1,0 +1,309 @@
+﻿<Dimension xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Dim Doctor</ID>
+  <Name>Dim Doctor</Name>
+  <Description>Лікарі, SCD Type 2 (відділення, спеціальність, категорія, ставка)</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <UnknownMember>None</UnknownMember>
+  <AttributeAllMemberName>Усі</AttributeAllMemberName>
+  <ErrorConfiguration>
+    <KeyDuplicate>ReportAndStop</KeyDuplicate>
+  </ErrorConfiguration>
+  <Language>1058</Language>
+  <Attributes>
+    <Attribute>
+      <ID>Doctor Version</ID>
+      <Name>Версія лікаря</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>DoctorKey</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>250</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimDoctor</TableID>
+          <ColumnID>VersionName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Doctor</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Лікар</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Specialty</AttributeID>
+          <Name>Спеціальність</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Category</AttributeID>
+          <Name>Кваліфікаційна категорія</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Hourly Rate</AttributeID>
+          <Name>Ставка грн за годину</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Current Version</AttributeID>
+          <Name>Поточна версія</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Floor</AttributeID>
+          <Name>Поверх</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Standard Minutes</AttributeID>
+          <Name>Норматив прийому у хв</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Doctor</ID>
+      <Name>Лікар</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>DoctorID_Source</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>200</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimDoctor</TableID>
+          <ColumnID>DoctorName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Status</AttributeID>
+          <Name>Статус</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>License</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Ліцензія</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Hire Date</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Дата прийому на роботу</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Specialty</ID>
+      <Name>Спеціальність</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>DepartmentName</ColumnID>
+          </Source>
+        </KeyColumn>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>SpecialtyName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>100</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimDoctor</TableID>
+          <ColumnID>SpecialtyName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Department</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Відділення</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Department</ID>
+      <Name>Відділення</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>DepartmentName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Category</ID>
+      <Name>Кваліфікаційна категорія</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>QualificationCategory</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Status</ID>
+      <Name>Статус</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>StatusName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Current Version</ID>
+      <Name>Поточна версія</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>CurrentVersionName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Hourly Rate</ID>
+      <Name>Ставка грн за годину</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Double</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>HourlyRate</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Floor</ID>
+      <Name>Поверх</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>UnsignedTinyInt</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>FloorNumber</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Standard Minutes</ID>
+      <Name>Норматив прийому у хв</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>UnsignedTinyInt</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>StandardConsultMinutes</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>License</ID>
+      <Name>Ліцензія</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>LicenseNumber</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Hire Date</ID>
+      <Name>Дата прийому на роботу</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>10</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDoctor</TableID>
+            <ColumnID>HireDateText</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Structure</ID>
+      <Name>Структура поліклініки</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Відділення</ID>
+          <Name>Відділення</Name>
+          <SourceAttributeID>Department</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Спеціальність</ID>
+          <Name>Спеціальність</Name>
+          <SourceAttributeID>Specialty</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Лікар</ID>
+          <Name>Лікар</Name>
+          <SourceAttributeID>Doctor Version</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

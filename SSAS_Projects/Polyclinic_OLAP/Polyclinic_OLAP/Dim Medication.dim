@@ -1,0 +1,257 @@
+﻿<Dimension xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Dim Medication</ID>
+  <Name>Dim Medication</Name>
+  <Description>Лікарські засоби: фармгрупа, діюча речовина, виробник, ціна</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <UnknownMember>None</UnknownMember>
+  <AttributeAllMemberName>Усі</AttributeAllMemberName>
+  <ErrorConfiguration>
+    <KeyDuplicate>ReportAndStop</KeyDuplicate>
+  </ErrorConfiguration>
+  <Language>1058</Language>
+  <Attributes>
+    <Attribute>
+      <ID>Medication</ID>
+      <Name>Препарат</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>MedicationKey</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>250</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimMedication</TableID>
+          <ColumnID>MedicationName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Substance</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Діюча речовина</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Manufacturer</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Виробник</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Price Category</AttributeID>
+          <Name>Цінова категорія</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Release Form</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Форма випуску</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Origin</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Походження</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Unit Price</AttributeID>
+          <Name>Ціна упаковки у грн</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Substance</ID>
+      <Name>Діюча речовина</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>150</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>ActiveSubstance</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Pharm Group</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Фармакологічна група</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Pharm Group</ID>
+      <Name>Фармакологічна група</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>PharmacologicalGroup</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Manufacturer</ID>
+      <Name>Виробник</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>Manufacturer</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Country</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Країна виробника</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Country</ID>
+      <Name>Країна виробника</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>60</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>ManufacturerCountry</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Price Category</ID>
+      <Name>Цінова категорія</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>PriceCategory</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Release Form</ID>
+      <Name>Форма випуску</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>50</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>ReleaseForm</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Origin</ID>
+      <Name>Походження</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>OriginName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Unit Price</ID>
+      <Name>Ціна упаковки у грн</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Double</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimMedication</TableID>
+            <ColumnID>UnitPrice</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Pharmacology</ID>
+      <Name>Фармакологія</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Фармгрупа</ID>
+          <Name>Фармгрупа</Name>
+          <SourceAttributeID>Pharm Group</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Діюча речовина</ID>
+          <Name>Діюча речовина</Name>
+          <SourceAttributeID>Substance</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Препарат</ID>
+          <Name>Препарат</Name>
+          <SourceAttributeID>Medication</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+    <Hierarchy>
+      <ID>Manufacturers</ID>
+      <Name>Виробники</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Країна</ID>
+          <Name>Країна</Name>
+          <SourceAttributeID>Country</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Виробник</ID>
+          <Name>Виробник</Name>
+          <SourceAttributeID>Manufacturer</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Препарат</ID>
+          <Name>Препарат</Name>
+          <SourceAttributeID>Medication</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

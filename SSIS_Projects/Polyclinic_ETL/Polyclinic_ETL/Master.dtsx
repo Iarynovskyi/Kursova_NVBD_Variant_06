@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<DTS:Executable
+  xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CheckpointFileName=""
+  DTS:CheckpointUsage="1"
+  DTS:CreationDate="10/23/2026 12:00:00 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-I5COGTD"
+  DTS:CreatorName="DESKTOP-I5COGTD\LEGION"
+  DTS:Description="Головний пакет ETL: аудит, повне/інкрементальне завантаження, виміри -&gt; факти -&gt; агрегати, checkpoint-відновлення"
+  DTS:DTSID="{3B920D18-2890-B7B9-F1A5-CDC4E3102FBC}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1058"
+  DTS:ObjectName="Master"
+  DTS:PackageType="5"
+  DTS:SaveCheckpoints="True"
+  DTS:VersionBuild="1"
+  DTS:VersionGUID="{5FEDB47B-FB22-B63B-7225-49B6E0B2BE3B}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:PropertyExpression
+    DTS:Name="CheckpointFileName">@[$Project::CheckpointFolder] + "\\Master.chk"</DTS:PropertyExpression>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1A0BF1BD-F9F1-CBD9-AD0A-C5D730D4CFC7}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="ExecutionID">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\SQL Початок аудиту"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Реєстрація запуску ETL (батьківський запис для дочірніх пакетів)"
+      DTS:DTSID="{A10FBCF6-59E4-015F-2312-E28F6929B07C}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Початок аудиту"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_StartExecution @PackageName = ?, @LoadType = ?, @ParentExecutionID = NULL, @ExecutionID = ? OUTPUT;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="100" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="$Project::LoadType"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="20" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Повне перезавантаження"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="LoadType = Full: очищення фактів і вимірів, скидання watermark-ів і реєстру файлів"
+      DTS:DTSID="{A4C710F7-E3CA-455B-6CB5-28D11FD45A74}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Повне перезавантаження"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_ResetForFullLoad;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SEQ Виміри"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Виміри SCD1 і SCD2 (паралельно)"
+      DTS:DTSID="{E1F79DB4-DD31-8A6E-1E01-C8C7D4E4E71F}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SEQ Виміри">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Виміри\EPT Dim_Reference"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Хвороби та лікарські засоби (SCD Type 1)"
+          DTS:DTSID="{80F243EC-9D1D-DFF8-986D-D68E066774E9}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:FailPackageOnFailure="True"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EPT Dim_Reference"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>Dim_Reference.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>ParentExecutionID</ParameterName>
+                <BindedVariableOrParameterName>User::ExecutionID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Виміри\EPT Dim_Patient_Doctor"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Пацієнти та лікарі (SCD Type 2)"
+          DTS:DTSID="{F9A04B53-8A4B-873C-6331-0B9C359A91BA}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:FailPackageOnFailure="True"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EPT Dim_Patient_Doctor"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>Dim_Patient_Doctor.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>ParentExecutionID</ParameterName>
+                <BindedVariableOrParameterName>User::ExecutionID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SEQ Факти"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Факти візитів (OLTP + архів) і рецептів"
+      DTS:DTSID="{BAD8C871-B03D-A4A6-784C-3D1AC23F10C9}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SEQ Факти">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Факти\EPT Fact_Visits"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Факт візитів/діагнозів"
+          DTS:DTSID="{CDB4191C-CB5B-CD4F-BBCD-5EBD9881D08D}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:FailPackageOnFailure="True"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EPT Fact_Visits"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>Fact_Visits.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>ParentExecutionID</ParameterName>
+                <BindedVariableOrParameterName>User::ExecutionID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Факти\EPT Fact_Prescriptions"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Факт рецептів"
+          DTS:DTSID="{1C028321-A99C-58D2-711B-7FC3385DAC69}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:FailPackageOnFailure="True"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EPT Fact_Prescriptions"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>Fact_Prescriptions.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>ParentExecutionID</ParameterName>
+                <BindedVariableOrParameterName>User::ExecutionID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\SEQ Факти.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{779EA398-7A1E-E6BE-6F39-4D71523E94F8}"
+          DTS:From="Package\SEQ Факти\EPT Fact_Visits"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\SEQ Факти\EPT Fact_Prescriptions" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SEQ Агрегати"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Агрегований факт завантаженості лікарів"
+      DTS:DTSID="{9FF77FDC-2C83-9BA3-089A-913A135FCE9F}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SEQ Агрегати">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Агрегати\EPT Fact_DoctorMonthly"
+          DTS:CreationName="Microsoft.ExecutePackageTask"
+          DTS:Description="Aggregate по лікарях і місяцях"
+          DTS:DTSID="{7A6B54BF-BBC6-088C-1903-18A9C06141CC}"
+          DTS:ExecutableType="Microsoft.ExecutePackageTask"
+          DTS:FailPackageOnFailure="True"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="EPT Fact_DoctorMonthly"
+          DTS:TaskContact="Microsoft Corporation; Microsoft SQL Server; Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <ExecutePackageTask>
+              <UseProjectReference>True</UseProjectReference>
+              <PackageName>Fact_DoctorMonthly.dtsx</PackageName>
+              <ParameterAssignment>
+                <ParameterName>ParentExecutionID</ParameterName>
+                <BindedVariableOrParameterName>User::ExecutionID</BindedVariableOrParameterName>
+              </ParameterAssignment>
+            </ExecutePackageTask>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Завершення аудиту"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Підсумки запуску (сума рядків дочірніх пакетів)"
+      DTS:DTSID="{CE8DA406-5ED4-1DF1-3828-8812D891D606}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Завершення аудиту"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_FinishExecution @ExecutionID = ?;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{147C0308-845A-EE7D-DAEC-BB7E5DE3F691}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[$Project::LoadType] == &quot;Full&quot;"
+      DTS:From="Package\SQL Початок аудиту"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL Повне перезавантаження" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{935A6904-1D7A-D324-1244-5E1965EF5974}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[$Project::LoadType] != &quot;Full&quot;"
+      DTS:From="Package\SQL Початок аудиту"
+      DTS:LogicalAnd="False"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\SEQ Виміри" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{02534A35-8A8B-87F6-BD25-A581DAC30119}"
+      DTS:From="Package\SQL Повне перезавантаження"
+      DTS:LogicalAnd="False"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SEQ Виміри" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{8C56AD35-1A05-3355-7BDD-C86683753341}"
+      DTS:From="Package\SEQ Виміри"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SEQ Факти" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{BFC3FA11-2EA3-7C41-CB2F-8FBC6F269CBA}"
+      DTS:From="Package\SEQ Факти"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\SEQ Агрегати" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{4669E50B-57EA-73D9-1FF1-BD455182249D}"
+      DTS:From="Package\SEQ Агрегати"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\SQL Завершення аудиту" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{712D02F8-69A1-83F7-5114-5CB72AA163E5}"
+      DTS:EventID="916760112"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{B90FD063-BC5A-ED11-3968-AA2F9D0D0DF0}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL Журнал помилки"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="OnError: позначити запуск як Failed і зберегти текст помилки"
+          DTS:DTSID="{FAFCEC54-789B-D352-335A-ABED916DD845}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL Журнал помилки"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+              SQLTask:SqlStatementSource="EXEC etl.usp_FailExecution @ExecutionID = ?, @ErrorMessage = ?;"
+              xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::ExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="4000" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

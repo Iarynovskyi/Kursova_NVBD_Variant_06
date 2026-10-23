@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="DESKTOP-I5COGTD.PolyclinicDW"
+  DTS:DTSID="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=DESKTOP-I5COGTD;Initial Catalog=PolyclinicDW;Provider=MSOLEDBSQL.1;Integrated Security=SSPI;Application Name=SSIS-Polyclinic_ETL-{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}DESKTOP-I5COGTD.PolyclinicDW;Auto Translate=False;" />
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

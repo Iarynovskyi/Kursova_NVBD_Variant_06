@@ -1,0 +1,17 @@
+﻿<!-- =====================================================================
+     Файл: BACKUP_CUBE.xmla
+     Опис: Резервна копія OLAP-бази Polyclinic_OLAP (Етап 4, п. 4.7)
+     Запуск: SSMS → Connect → Analysis Services → DESKTOP-I5COGTD →
+             File → Open → цей файл → Execute (F5).
+     Результат: Polyclinic_OLAP.abf у теці резервних копій SSAS
+             (D:\Microsoft SQL Server\MSAS17.MSSQLSERVER\OLAP\Backup).
+     Відновлення: SSMS → Databases → Restore (або XMLA-команда Restore).
+     ===================================================================== -->
+<Backup xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <Object>
+    <DatabaseID>Polyclinic_OLAP</DatabaseID>
+  </Object>
+  <File>Polyclinic_OLAP.abf</File>
+  <AllowOverwrite>true</AllowOverwrite>
+  <ApplyCompression>true</ApplyCompression>
+</Backup>

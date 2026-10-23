@@ -1,0 +1,780 @@
+﻿<DataSourceView xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Polyclinic DW</ID>
+  <Name>Polyclinic DW</Name>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <Annotations>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ShowFriendlyNames</Name>
+      <Value>true</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:CurrentLayout</Name>
+      <Value>_ALL_TABLES_</Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:SchemaRestriction</Name>
+      <Value></Value>
+    </Annotation>
+    <Annotation>
+      <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:RetrieveRelationships</Name>
+      <Value>true</Value>
+    </Annotation>
+  </Annotations>
+  <DataSourceID>Polyclinic DW</DataSourceID>
+  <Schema>
+    <xs:schema id="Polyclinic_x0020_DW" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop">
+      <xs:element name="Polyclinic_x0020_DW" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+        <xs:complexType>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="dbo_DimDate" msprop:FriendlyName="DimDate" msprop:DbSchemaName="dbo" msprop:DbTableName="DimDate" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="DateKey" msprop:FriendlyName="DateKey" msprop:DbColumnName="DateKey" type="xs:int" />
+                  <xs:element name="FullDate" msprop:FriendlyName="FullDate" msprop:DbColumnName="FullDate" type="xs:dateTime" />
+                  <xs:element name="YearNumber" msprop:FriendlyName="YearNumber" msprop:DbColumnName="YearNumber" type="xs:short" />
+                  <xs:element name="QuarterNumber" msprop:FriendlyName="QuarterNumber" msprop:DbColumnName="QuarterNumber" type="xs:unsignedByte" />
+                  <xs:element name="QuarterName" msprop:FriendlyName="QuarterName" msprop:DbColumnName="QuarterName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="QuarterKey" msprop:FriendlyName="QuarterKey" msprop:DbColumnName="QuarterKey" type="xs:int" />
+                  <xs:element name="QuarterYearName" msprop:FriendlyName="QuarterYearName" msprop:DbColumnName="QuarterYearName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="MonthNumber" msprop:FriendlyName="MonthNumber" msprop:DbColumnName="MonthNumber" type="xs:unsignedByte" />
+                  <xs:element name="MonthName" msprop:FriendlyName="MonthName" msprop:DbColumnName="MonthName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="MonthKey" msprop:FriendlyName="MonthKey" msprop:DbColumnName="MonthKey" type="xs:int" />
+                  <xs:element name="MonthYearName" msprop:FriendlyName="MonthYearName" msprop:DbColumnName="MonthYearName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DayOfMonth" msprop:FriendlyName="DayOfMonth" msprop:DbColumnName="DayOfMonth" type="xs:unsignedByte" />
+                  <xs:element name="DayOfWeekNumber" msprop:FriendlyName="DayOfWeekNumber" msprop:DbColumnName="DayOfWeekNumber" type="xs:unsignedByte" />
+                  <xs:element name="DayOfWeekName" msprop:FriendlyName="DayOfWeekName" msprop:DbColumnName="DayOfWeekName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="WeekOfYear" msprop:FriendlyName="WeekOfYear" msprop:DbColumnName="WeekOfYear" type="xs:unsignedByte" />
+                  <xs:element name="IsWeekend" msprop:FriendlyName="IsWeekend" msprop:DbColumnName="IsWeekend" type="xs:boolean" />
+                  <xs:element name="IsHoliday" msprop:FriendlyName="IsHoliday" msprop:DbColumnName="IsHoliday" type="xs:boolean" />
+                  <xs:element name="HolidayName" msprop:FriendlyName="HolidayName" msprop:DbColumnName="HolidayName" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="WorkingDayStatus" msprop:FriendlyName="WorkingDayStatus" msprop:DbColumnName="WorkingDayStatus">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DateName" msdata:ReadOnly="true" msprop:DbColumnName="DateName" msprop:ComputedColumnExpression="CONVERT(NVARCHAR(10), FullDate, 104)" msprop:Description="Дата у форматі дд.ММ.рррр" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="HolidayDisplay" msdata:ReadOnly="true" msprop:DbColumnName="HolidayDisplay" msprop:ComputedColumnExpression="ISNULL(HolidayName, N'Не свято')" msprop:Description="Назва свята або «Не свято»" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="WeekName" msdata:ReadOnly="true" msprop:DbColumnName="WeekName" msprop:ComputedColumnExpression="N'Тиждень ' + RIGHT('0' + CAST(WeekOfYear AS VARCHAR(2)), 2)" msprop:Description="Назва тижня року" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="IsWorkingDay" msdata:ReadOnly="true" msprop:DbColumnName="IsWorkingDay" msprop:ComputedColumnExpression="CASE WHEN WorkingDayStatus = N'Робочий день' THEN 1 ELSE 0 END" msprop:Description="1 = робочий день" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                  <xs:element name="MonthOfYearKey" msdata:ReadOnly="true" msprop:DbColumnName="MonthOfYearKey" msprop:ComputedColumnExpression="CASE WHEN DateKey = 19000101 THEN 0 ELSE MonthNumber END" msprop:Description="Номер місяця; 0 = невідома дата" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                  <xs:element name="DayOfWeekKey" msdata:ReadOnly="true" msprop:DbColumnName="DayOfWeekKey" msprop:ComputedColumnExpression="CASE WHEN DateKey = 19000101 THEN 0 ELSE DayOfWeekNumber END" msprop:Description="Номер дня тижня; 0 = невідома дата" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimPatient" msprop:FriendlyName="DimPatient" msprop:DbSchemaName="dbo" msprop:DbTableName="DimPatient" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="PatientKey" msprop:FriendlyName="PatientKey" msprop:DbColumnName="PatientKey" type="xs:int" />
+                  <xs:element name="PatientID_Source" msprop:FriendlyName="PatientID_Source" msprop:DbColumnName="PatientID_Source" type="xs:int" />
+                  <xs:element name="MedicalCardNumber" msprop:FriendlyName="MedicalCardNumber" msprop:DbColumnName="MedicalCardNumber">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="FullName" msprop:FriendlyName="FullName" msprop:DbColumnName="FullName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="160" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="BirthDate" msprop:FriendlyName="BirthDate" msprop:DbColumnName="BirthDate" type="xs:dateTime" />
+                  <xs:element name="BirthYear" msprop:FriendlyName="BirthYear" msprop:DbColumnName="BirthYear" type="xs:short" />
+                  <xs:element name="Gender" msprop:FriendlyName="Gender" msprop:DbColumnName="Gender">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="1" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="GenderName" msprop:FriendlyName="GenderName" msprop:DbColumnName="GenderName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="15" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="BloodType" msprop:FriendlyName="BloodType" msprop:DbColumnName="BloodType">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="15" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DistrictName" msprop:FriendlyName="DistrictName" msprop:DbColumnName="DistrictName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="AddressLine" msprop:FriendlyName="AddressLine" msprop:DbColumnName="AddressLine">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="250" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="Phone" msprop:FriendlyName="Phone" msprop:DbColumnName="Phone">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="RegistrationDate" msprop:FriendlyName="RegistrationDate" msprop:DbColumnName="RegistrationDate" type="xs:dateTime" />
+                  <xs:element name="ValidFrom" msprop:FriendlyName="ValidFrom" msprop:DbColumnName="ValidFrom" type="xs:dateTime" />
+                  <xs:element name="ValidTo" msprop:FriendlyName="ValidTo" msprop:DbColumnName="ValidTo" type="xs:dateTime" />
+                  <xs:element name="IsCurrent" msprop:FriendlyName="IsCurrent" msprop:DbColumnName="IsCurrent" type="xs:boolean" />
+                  <xs:element name="PatientName" msdata:ReadOnly="true" msprop:DbColumnName="PatientName" msprop:ComputedColumnExpression="FullName + N' (' + MedicalCardNumber + N')'" msprop:Description="ПІБ і номер медичної картки" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="VersionName" msdata:ReadOnly="true" msprop:DbColumnName="VersionName" msprop:ComputedColumnExpression="FullName + N' (' + MedicalCardNumber + N', версія з ' + CONVERT(NVARCHAR(10), ValidFrom, 104) + N')'" msprop:Description="Версія SCD2 пацієнта" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="250" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="CurrentVersionName" msdata:ReadOnly="true" msprop:DbColumnName="CurrentVersionName" msprop:ComputedColumnExpression="CASE WHEN IsCurrent = 1 THEN N'Поточна' ELSE N'Історична' END" msprop:Description="Ознака поточної версії SCD2" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ValidFromText" msdata:ReadOnly="true" msprop:DbColumnName="ValidFromText" msprop:ComputedColumnExpression="CONVERT(NVARCHAR(10), ValidFrom, 104)" msprop:Description="Початок дії версії" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ValidToText" msdata:ReadOnly="true" msprop:DbColumnName="ValidToText" msprop:ComputedColumnExpression="CASE WHEN ValidTo &gt;= '9999-01-01' THEN N'—' ELSE CONVERT(NVARCHAR(10), ValidTo, 104) END" msprop:Description="Кінець дії версії" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimDoctor" msprop:FriendlyName="DimDoctor" msprop:DbSchemaName="dbo" msprop:DbTableName="DimDoctor" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="DoctorKey" msprop:FriendlyName="DoctorKey" msprop:DbColumnName="DoctorKey" type="xs:int" />
+                  <xs:element name="DoctorID_Source" msprop:FriendlyName="DoctorID_Source" msprop:DbColumnName="DoctorID_Source" type="xs:int" />
+                  <xs:element name="LicenseNumber" msprop:FriendlyName="LicenseNumber" msprop:DbColumnName="LicenseNumber">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="FullName" msprop:FriendlyName="FullName" msprop:DbColumnName="FullName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="160" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DepartmentName" msprop:FriendlyName="DepartmentName" msprop:DbColumnName="DepartmentName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="FloorNumber" msprop:FriendlyName="FloorNumber" msprop:DbColumnName="FloorNumber" type="xs:unsignedByte" />
+                  <xs:element name="SpecialtyName" msprop:FriendlyName="SpecialtyName" msprop:DbColumnName="SpecialtyName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="StandardConsultMinutes" msprop:FriendlyName="StandardConsultMinutes" msprop:DbColumnName="StandardConsultMinutes" type="xs:unsignedByte" />
+                  <xs:element name="HourlyRate" msprop:FriendlyName="HourlyRate" msprop:DbColumnName="HourlyRate" type="xs:decimal" />
+                  <xs:element name="QualificationCategory" msprop:FriendlyName="QualificationCategory" msprop:DbColumnName="QualificationCategory">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="HireDate" msprop:FriendlyName="HireDate" msprop:DbColumnName="HireDate" type="xs:dateTime" />
+                  <xs:element name="DismissalDate" msprop:FriendlyName="DismissalDate" msprop:DbColumnName="DismissalDate" type="xs:dateTime" minOccurs="0" />
+                  <xs:element name="IsActive" msprop:FriendlyName="IsActive" msprop:DbColumnName="IsActive" type="xs:boolean" />
+                  <xs:element name="ValidFrom" msprop:FriendlyName="ValidFrom" msprop:DbColumnName="ValidFrom" type="xs:dateTime" />
+                  <xs:element name="ValidTo" msprop:FriendlyName="ValidTo" msprop:DbColumnName="ValidTo" type="xs:dateTime" />
+                  <xs:element name="IsCurrent" msprop:FriendlyName="IsCurrent" msprop:DbColumnName="IsCurrent" type="xs:boolean" />
+                  <xs:element name="DoctorName" msdata:ReadOnly="true" msprop:DbColumnName="DoctorName" msprop:ComputedColumnExpression="FullName + N' (' + LicenseNumber + N')'" msprop:Description="ПІБ і номер ліцензії (стабільні між версіями SCD2)" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="VersionName" msdata:ReadOnly="true" msprop:DbColumnName="VersionName" msprop:ComputedColumnExpression="FullName + N' — ' + QualificationCategory + N' (версія з ' + CONVERT(NVARCHAR(10), ValidFrom, 104) + N')'" msprop:Description="Версія SCD2 лікаря" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="250" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="StatusName" msdata:ReadOnly="true" msprop:DbColumnName="StatusName" msprop:ComputedColumnExpression="CASE WHEN IsActive = 1 THEN N'Працює' ELSE N'Звільнений' END" msprop:Description="Статус лікаря" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="CurrentVersionName" msdata:ReadOnly="true" msprop:DbColumnName="CurrentVersionName" msprop:ComputedColumnExpression="CASE WHEN IsCurrent = 1 THEN N'Поточна' ELSE N'Історична' END" msprop:Description="Ознака поточної версії SCD2" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="HireDateText" msdata:ReadOnly="true" msprop:DbColumnName="HireDateText" msprop:ComputedColumnExpression="CONVERT(NVARCHAR(10), HireDate, 104)" msprop:Description="Дата прийому на роботу" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimDisease" msprop:FriendlyName="DimDisease" msprop:DbSchemaName="dbo" msprop:DbTableName="DimDisease" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="DiseaseKey" msprop:FriendlyName="DiseaseKey" msprop:DbColumnName="DiseaseKey" type="xs:int" />
+                  <xs:element name="DiseaseID_Source" msprop:FriendlyName="DiseaseID_Source" msprop:DbColumnName="DiseaseID_Source" type="xs:int" />
+                  <xs:element name="ICD10Code" msprop:FriendlyName="ICD10Code" msprop:DbColumnName="ICD10Code">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="10" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ICD10Chapter" msprop:FriendlyName="ICD10Chapter" msprop:DbColumnName="ICD10Chapter">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="1" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DiseaseName" msprop:FriendlyName="DiseaseName" msprop:DbColumnName="DiseaseName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="200" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DiseaseCategory" msprop:FriendlyName="DiseaseCategory" msprop:DbColumnName="DiseaseCategory">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="IsChronic" msprop:FriendlyName="IsChronic" msprop:DbColumnName="IsChronic" type="xs:boolean" />
+                  <xs:element name="ChronicStatusName" msprop:FriendlyName="ChronicStatusName" msprop:DbColumnName="ChronicStatusName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ProfileSpecialtyName" msprop:FriendlyName="ProfileSpecialtyName" msprop:DbColumnName="ProfileSpecialtyName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DiseaseDisplay" msdata:ReadOnly="true" msprop:DbColumnName="DiseaseDisplay" msprop:ComputedColumnExpression="ICD10Code + N' ' + DiseaseName" msprop:Description="Код МКХ-10 і назва" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="220" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimMedication" msprop:FriendlyName="DimMedication" msprop:DbSchemaName="dbo" msprop:DbTableName="DimMedication" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="MedicationKey" msprop:FriendlyName="MedicationKey" msprop:DbColumnName="MedicationKey" type="xs:int" />
+                  <xs:element name="MedicationID_Source" msprop:FriendlyName="MedicationID_Source" msprop:DbColumnName="MedicationID_Source" type="xs:int" />
+                  <xs:element name="RegistrationCode" msprop:FriendlyName="RegistrationCode" msprop:DbColumnName="RegistrationCode">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="TradeName" msprop:FriendlyName="TradeName" msprop:DbColumnName="TradeName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="150" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ActiveSubstance" msprop:FriendlyName="ActiveSubstance" msprop:DbColumnName="ActiveSubstance">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="150" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="PharmacologicalGroup" msprop:FriendlyName="PharmacologicalGroup" msprop:DbColumnName="PharmacologicalGroup">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ReleaseForm" msprop:FriendlyName="ReleaseForm" msprop:DbColumnName="ReleaseForm">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="50" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="Manufacturer" msprop:FriendlyName="Manufacturer" msprop:DbColumnName="Manufacturer">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ManufacturerCountry" msprop:FriendlyName="ManufacturerCountry" msprop:DbColumnName="ManufacturerCountry">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="60" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="IsDomestic" msprop:FriendlyName="IsDomestic" msprop:DbColumnName="IsDomestic" type="xs:boolean" />
+                  <xs:element name="UnitPrice" msprop:FriendlyName="UnitPrice" msprop:DbColumnName="UnitPrice" type="xs:decimal" />
+                  <xs:element name="PriceCategory" msprop:FriendlyName="PriceCategory" msprop:DbColumnName="PriceCategory">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="MedicationName" msdata:ReadOnly="true" msprop:DbColumnName="MedicationName" msprop:ComputedColumnExpression="TradeName + N', ' + ReleaseForm + N' [' + RegistrationCode + N']'" msprop:Description="Препарат: назва, форма, реєстраційний код" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="250" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="OriginName" msdata:ReadOnly="true" msprop:DbColumnName="OriginName" msprop:ComputedColumnExpression="CASE WHEN IsDomestic = 1 THEN N'Вітчизняний' ELSE N'Імпортний' END" msprop:Description="Походження препарату" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimAgeGroup" msprop:FriendlyName="DimAgeGroup" msprop:DbSchemaName="dbo" msprop:DbTableName="DimAgeGroup" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="AgeGroupKey" msprop:FriendlyName="AgeGroupKey" msprop:DbColumnName="AgeGroupKey" type="xs:int" />
+                  <xs:element name="AgeGroupName" msprop:FriendlyName="AgeGroupName" msprop:DbColumnName="AgeGroupName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="40" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="AgeFrom" msprop:FriendlyName="AgeFrom" msprop:DbColumnName="AgeFrom" type="xs:short" minOccurs="0" />
+                  <xs:element name="AgeTo" msprop:FriendlyName="AgeTo" msprop:DbColumnName="AgeTo" type="xs:short" minOccurs="0" />
+                  <xs:element name="SortOrder" msprop:FriendlyName="SortOrder" msprop:DbColumnName="SortOrder" type="xs:unsignedByte" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_DimClinicalOutcome" msprop:FriendlyName="DimClinicalOutcome" msprop:DbSchemaName="dbo" msprop:DbTableName="DimClinicalOutcome" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="OutcomeKey" msprop:FriendlyName="OutcomeKey" msprop:DbColumnName="OutcomeKey" type="xs:int" />
+                  <xs:element name="VisitType" msprop:FriendlyName="VisitType" msprop:DbColumnName="VisitType">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="Severity" msprop:FriendlyName="Severity" msprop:DbColumnName="Severity">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="SeverityOrder" msprop:FriendlyName="SeverityOrder" msprop:DbColumnName="SeverityOrder" type="xs:unsignedByte" />
+                  <xs:element name="TreatmentOutcome" msprop:FriendlyName="TreatmentOutcome" msprop:DbColumnName="TreatmentOutcome">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="OutcomeGroup" msprop:FriendlyName="OutcomeGroup" msprop:DbColumnName="OutcomeGroup">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="IsRecovered" msprop:FriendlyName="IsRecovered" msprop:DbColumnName="IsRecovered" type="xs:boolean" />
+                  <xs:element name="IsClosed" msprop:FriendlyName="IsClosed" msprop:DbColumnName="IsClosed" type="xs:boolean" />
+                  <xs:element name="OutcomeName" msdata:ReadOnly="true" msprop:DbColumnName="OutcomeName" msprop:ComputedColumnExpression="VisitType + N' · ' + Severity + N' · ' + TreatmentOutcome" msprop:Description="Тип візиту · тяжкість · результат" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="RecoveredName" msdata:ReadOnly="true" msprop:DbColumnName="RecoveredName" msprop:ComputedColumnExpression="CASE WHEN IsRecovered = 1 THEN N'Одужання або покращення' ELSE N'Без одужання' END" msprop:Description="Ознака одужання" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="30" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ClosedName" msdata:ReadOnly="true" msprop:DbColumnName="ClosedName" msprop:ComputedColumnExpression="CASE WHEN IsClosed = 1 THEN N'Завершений' ELSE N'Триває' END" msprop:Description="Стан випадку" msprop:IsLogical="True" minOccurs="0">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="NQ_ICD10Chapters" msprop:QueryDefinition="SELECT CAST(v.ChapterLetter AS CHAR(1)) AS ChapterLetter, CAST(v.ChapterName AS NVARCHAR(100)) AS ChapterName, CAST(v.ChapterOrder AS INT) AS ChapterOrder
+              FROM (VALUES
+              ('?', N'Невідомо', 0),
+              ('A', N'A00–B99 Інфекційні та паразитарні хвороби', 1),
+              ('B', N'A00–B99 Інфекційні та паразитарні хвороби (B)', 2),
+              ('C', N'C00–D48 Новоутворення', 3),
+              ('D', N'D50–D89 Хвороби крові та імунні порушення', 4),
+              ('E', N'E00–E90 Ендокринні хвороби та розлади обміну речовин', 5),
+              ('G', N'G00–G99 Хвороби нервової системи', 6),
+              ('H', N'H00–H95 Хвороби ока та вуха', 7),
+              ('I', N'I00–I99 Хвороби системи кровообігу', 8),
+              ('J', N'J00–J99 Хвороби органів дихання', 9),
+              ('K', N'K00–K93 Хвороби органів травлення', 10),
+              ('L', N'L00–L99 Хвороби шкіри', 11),
+              ('M', N'M00–M99 Хвороби кістково-м’язової системи', 12),
+              ('N', N'N00–N99 Хвороби сечостатевої системи', 13),
+              ('S', N'S00–T98 Травми та отруєння', 14),
+              ('T', N'S00–T98 Травми та отруєння (T)', 15),
+              ('U', N'U00–U85 Коди для особливих цілей (COVID-19)', 16),
+              ('Z', N'Z00–Z99 Фактори, що впливають на стан здоров’я', 17)
+              ) AS v (ChapterLetter, ChapterName, ChapterOrder)" msprop:DbTableName="NQ_ICD10Chapters" msprop:QueryBuilder="SpecificQueryBuilder" msprop:FriendlyName="NQ_ICD10Chapters" msprop:IsLogical="True" msprop:TableType="View" msprop:Description="Розділи МКХ-10">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="ChapterLetter" msprop:FriendlyName="ChapterLetter" msprop:DbColumnName="ChapterLetter">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="1" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ChapterName" msprop:FriendlyName="ChapterName" msprop:DbColumnName="ChapterName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="100" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="ChapterOrder" msprop:FriendlyName="ChapterOrder" msprop:DbColumnName="ChapterOrder" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="NQ_SourceSystem" msprop:QueryDefinition="SELECT CAST(v.SourceSystem AS NVARCHAR(20)) AS SourceSystem, CAST(v.SourceSystemName AS NVARCHAR(60)) AS SourceSystemName
+              FROM (VALUES (N'OLTP', N'Основна система (PolyclinicOLTP)'), (N'BRANCH2', N'Архів Філії №2 (CSV)')) AS v (SourceSystem, SourceSystemName)" msprop:DbTableName="NQ_SourceSystem" msprop:QueryBuilder="SpecificQueryBuilder" msprop:FriendlyName="NQ_SourceSystem" msprop:IsLogical="True" msprop:TableType="View" msprop:Description="Джерела даних">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="SourceSystem" msprop:FriendlyName="SourceSystem" msprop:DbColumnName="SourceSystem">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="SourceSystemName" msprop:FriendlyName="SourceSystemName" msprop:DbColumnName="SourceSystemName">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="60" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_FactVisits" msprop:FriendlyName="FactVisits" msprop:DbSchemaName="dbo" msprop:DbTableName="FactVisits" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="VisitFactKey" msprop:FriendlyName="VisitFactKey" msprop:DbColumnName="VisitFactKey" type="xs:long" />
+                  <xs:element name="SourceSystem" msprop:FriendlyName="SourceSystem" msprop:DbColumnName="SourceSystem">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DateKey" msprop:FriendlyName="DateKey" msprop:DbColumnName="DateKey" type="xs:int" />
+                  <xs:element name="RecoveryDateKey" msprop:FriendlyName="RecoveryDateKey" msprop:DbColumnName="RecoveryDateKey" type="xs:int" />
+                  <xs:element name="PatientKey" msprop:FriendlyName="PatientKey" msprop:DbColumnName="PatientKey" type="xs:int" />
+                  <xs:element name="DoctorKey" msprop:FriendlyName="DoctorKey" msprop:DbColumnName="DoctorKey" type="xs:int" />
+                  <xs:element name="DiseaseKey" msprop:FriendlyName="DiseaseKey" msprop:DbColumnName="DiseaseKey" type="xs:int" />
+                  <xs:element name="AgeGroupKey" msprop:FriendlyName="AgeGroupKey" msprop:DbColumnName="AgeGroupKey" type="xs:int" />
+                  <xs:element name="OutcomeKey" msprop:FriendlyName="OutcomeKey" msprop:DbColumnName="OutcomeKey" type="xs:int" />
+                  <xs:element name="VisitCount" msprop:FriendlyName="VisitCount" msprop:DbColumnName="VisitCount" type="xs:unsignedByte" />
+                  <xs:element name="DurationMinutes" msprop:FriendlyName="DurationMinutes" msprop:DbColumnName="DurationMinutes" type="xs:short" />
+                  <xs:element name="ConsultationCostUAH" msprop:FriendlyName="ConsultationCostUAH" msprop:DbColumnName="ConsultationCostUAH" type="xs:decimal" />
+                  <xs:element name="ConsultationCostEUR" msprop:FriendlyName="ConsultationCostEUR" msprop:DbColumnName="ConsultationCostEUR" type="xs:decimal" />
+                  <xs:element name="TreatmentDurationDays" msprop:FriendlyName="TreatmentDurationDays" msprop:DbColumnName="TreatmentDurationDays" type="xs:short" />
+                  <xs:element name="SickLeaveDays" msprop:FriendlyName="SickLeaveDays" msprop:DbColumnName="SickLeaveDays" type="xs:short" />
+                  <xs:element name="IsRecoveredFlag" msprop:FriendlyName="IsRecoveredFlag" msprop:DbColumnName="IsRecoveredFlag" type="xs:unsignedByte" />
+                  <xs:element name="FreeVisitCount" msdata:ReadOnly="true" msprop:DbColumnName="FreeVisitCount" msprop:ComputedColumnExpression="CASE WHEN IsFreeNSZU = 1 THEN VisitCount ELSE 0 END" msprop:Description="Безкоштовний візит НСЗУ (рахується один раз на візит)" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                  <xs:element name="ClosedCaseFlag" msdata:ReadOnly="true" msprop:DbColumnName="ClosedCaseFlag" msprop:ComputedColumnExpression="CASE WHEN RecoveryDateKey &lt;&gt; 19000101 THEN 1 ELSE 0 END" msprop:Description="1 = випадок завершено (є дата результату)" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="NQ_FactVisitsPatients" msprop:QueryDefinition="SELECT f.VisitFactKey, f.SourceSystem, f.DateKey, f.RecoveryDateKey, f.PatientKey, f.DoctorKey, f.DiseaseKey, f.AgeGroupKey, f.OutcomeKey, p.PatientID_Source
+              FROM dbo.FactVisits AS f
+              INNER JOIN dbo.DimPatient AS p ON p.PatientKey = f.PatientKey" msprop:DbTableName="NQ_FactVisitsPatients" msprop:QueryBuilder="SpecificQueryBuilder" msprop:FriendlyName="NQ_FactVisitsPatients" msprop:IsLogical="True" msprop:TableType="View" msprop:Description="Візити з природним ключем пацієнта">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="VisitFactKey" msprop:FriendlyName="VisitFactKey" msprop:DbColumnName="VisitFactKey" type="xs:long" />
+                  <xs:element name="SourceSystem" msprop:FriendlyName="SourceSystem" msprop:DbColumnName="SourceSystem">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DateKey" msprop:FriendlyName="DateKey" msprop:DbColumnName="DateKey" type="xs:int" />
+                  <xs:element name="RecoveryDateKey" msprop:FriendlyName="RecoveryDateKey" msprop:DbColumnName="RecoveryDateKey" type="xs:int" />
+                  <xs:element name="PatientKey" msprop:FriendlyName="PatientKey" msprop:DbColumnName="PatientKey" type="xs:int" />
+                  <xs:element name="DoctorKey" msprop:FriendlyName="DoctorKey" msprop:DbColumnName="DoctorKey" type="xs:int" />
+                  <xs:element name="DiseaseKey" msprop:FriendlyName="DiseaseKey" msprop:DbColumnName="DiseaseKey" type="xs:int" />
+                  <xs:element name="AgeGroupKey" msprop:FriendlyName="AgeGroupKey" msprop:DbColumnName="AgeGroupKey" type="xs:int" />
+                  <xs:element name="OutcomeKey" msprop:FriendlyName="OutcomeKey" msprop:DbColumnName="OutcomeKey" type="xs:int" />
+                  <xs:element name="PatientID_Source" msprop:FriendlyName="PatientID_Source" msprop:DbColumnName="PatientID_Source" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_FactPrescriptions" msprop:FriendlyName="FactPrescriptions" msprop:DbSchemaName="dbo" msprop:DbTableName="FactPrescriptions" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="PrescriptionFactKey" msprop:FriendlyName="PrescriptionFactKey" msprop:DbColumnName="PrescriptionFactKey" type="xs:long" />
+                  <xs:element name="SourceSystem" msprop:FriendlyName="SourceSystem" msprop:DbColumnName="SourceSystem">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:maxLength value="20" />
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="DateKey" msprop:FriendlyName="DateKey" msprop:DbColumnName="DateKey" type="xs:int" />
+                  <xs:element name="PatientKey" msprop:FriendlyName="PatientKey" msprop:DbColumnName="PatientKey" type="xs:int" />
+                  <xs:element name="DoctorKey" msprop:FriendlyName="DoctorKey" msprop:DbColumnName="DoctorKey" type="xs:int" />
+                  <xs:element name="DiseaseKey" msprop:FriendlyName="DiseaseKey" msprop:DbColumnName="DiseaseKey" type="xs:int" />
+                  <xs:element name="MedicationKey" msprop:FriendlyName="MedicationKey" msprop:DbColumnName="MedicationKey" type="xs:int" />
+                  <xs:element name="AgeGroupKey" msprop:FriendlyName="AgeGroupKey" msprop:DbColumnName="AgeGroupKey" type="xs:int" />
+                  <xs:element name="PrescriptionCount" msprop:FriendlyName="PrescriptionCount" msprop:DbColumnName="PrescriptionCount" type="xs:unsignedByte" />
+                  <xs:element name="QuantityPackages" msprop:FriendlyName="QuantityPackages" msprop:DbColumnName="QuantityPackages" type="xs:unsignedByte" />
+                  <xs:element name="CourseDurationDays" msprop:FriendlyName="CourseDurationDays" msprop:DbColumnName="CourseDurationDays" type="xs:short" />
+                  <xs:element name="UnitPriceSnapshot" msprop:FriendlyName="UnitPriceSnapshot" msprop:DbColumnName="UnitPriceSnapshot" type="xs:decimal" />
+                  <xs:element name="TotalMedicationCostUAH" msprop:FriendlyName="TotalMedicationCostUAH" msprop:DbColumnName="TotalMedicationCostUAH" type="xs:decimal" />
+                  <xs:element name="SubsidizedAmountUAH" msprop:FriendlyName="SubsidizedAmountUAH" msprop:DbColumnName="SubsidizedAmountUAH" type="xs:decimal" />
+                  <xs:element name="PatientPaidUAH" msprop:FriendlyName="PatientPaidUAH" msprop:DbColumnName="PatientPaidUAH" type="xs:decimal" />
+                  <xs:element name="SubsidizedCount" msdata:ReadOnly="true" msprop:DbColumnName="SubsidizedCount" msprop:ComputedColumnExpression="CAST(IsSubsidized AS INT)" msprop:Description="1 = пільговий рецепт «Доступні ліки»" msprop:IsLogical="True" type="xs:int" minOccurs="0" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="dbo_FactDoctorMonthlySummary" msprop:FriendlyName="FactDoctorMonthlySummary" msprop:DbSchemaName="dbo" msprop:DbTableName="FactDoctorMonthlySummary" msprop:TableType="Table">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="SummaryKey" msprop:FriendlyName="SummaryKey" msprop:DbColumnName="SummaryKey" type="xs:int" />
+                  <xs:element name="DoctorKey" msprop:FriendlyName="DoctorKey" msprop:DbColumnName="DoctorKey" type="xs:int" />
+                  <xs:element name="MonthKey" msprop:FriendlyName="MonthKey" msprop:DbColumnName="MonthKey" type="xs:int" />
+                  <xs:element name="MonthDateKey" msprop:FriendlyName="MonthDateKey" msprop:DbColumnName="MonthDateKey" type="xs:int" />
+                  <xs:element name="TotalVisitsCount" msprop:FriendlyName="TotalVisitsCount" msprop:DbColumnName="TotalVisitsCount" type="xs:int" />
+                  <xs:element name="UniquePatientsCount" msprop:FriendlyName="UniquePatientsCount" msprop:DbColumnName="UniquePatientsCount" type="xs:int" />
+                  <xs:element name="FreeNSZUVisitsCount" msprop:FriendlyName="FreeNSZUVisitsCount" msprop:DbColumnName="FreeNSZUVisitsCount" type="xs:int" />
+                  <xs:element name="TotalDurationMinutes" msprop:FriendlyName="TotalDurationMinutes" msprop:DbColumnName="TotalDurationMinutes" type="xs:int" />
+                  <xs:element name="AvgVisitDurationMinutes" msprop:FriendlyName="AvgVisitDurationMinutes" msprop:DbColumnName="AvgVisitDurationMinutes" type="xs:decimal" />
+                  <xs:element name="MinVisitDurationMinutes" msprop:FriendlyName="MinVisitDurationMinutes" msprop:DbColumnName="MinVisitDurationMinutes" type="xs:short" />
+                  <xs:element name="MaxVisitDurationMinutes" msprop:FriendlyName="MaxVisitDurationMinutes" msprop:DbColumnName="MaxVisitDurationMinutes" type="xs:short" />
+                  <xs:element name="TotalRevenueUAH" msprop:FriendlyName="TotalRevenueUAH" msprop:DbColumnName="TotalRevenueUAH" type="xs:decimal" />
+                  <xs:element name="TotalSickLeaveDaysIssued" msprop:FriendlyName="TotalSickLeaveDaysIssued" msprop:DbColumnName="TotalSickLeaveDaysIssued" type="xs:int" />
+                  <xs:element name="WorkingDaysInMonth" msprop:FriendlyName="WorkingDaysInMonth" msprop:DbColumnName="WorkingDaysInMonth" type="xs:unsignedByte" />
+                  <xs:element name="VisitsPerWorkingDay" msprop:FriendlyName="VisitsPerWorkingDay" msprop:DbColumnName="VisitsPerWorkingDay" type="xs:decimal" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:choice>
+        </xs:complexType>
+        <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimDate" />
+          <xs:field xpath="DateKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimPatient_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimPatient" />
+          <xs:field xpath="PatientKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimDoctor_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimDoctor" />
+          <xs:field xpath="DoctorKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimDisease_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimDisease" />
+          <xs:field xpath="DiseaseKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimMedication_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimMedication" />
+          <xs:field xpath="MedicationKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimAgeGroup_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimAgeGroup" />
+          <xs:field xpath="AgeGroupKey" />
+        </xs:unique>
+        <xs:unique name="dbo_DimClinicalOutcome_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_DimClinicalOutcome" />
+          <xs:field xpath="OutcomeKey" />
+        </xs:unique>
+        <xs:unique name="NQ_ICD10Chapters_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//NQ_ICD10Chapters" />
+          <xs:field xpath="ChapterLetter" />
+        </xs:unique>
+        <xs:unique name="NQ_SourceSystem_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//NQ_SourceSystem" />
+          <xs:field xpath="SourceSystem" />
+        </xs:unique>
+        <xs:unique name="dbo_FactVisits_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_FactVisits" />
+          <xs:field xpath="VisitFactKey" />
+        </xs:unique>
+        <xs:unique name="NQ_FactVisitsPatients_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//NQ_FactVisitsPatients" />
+          <xs:field xpath="VisitFactKey" />
+        </xs:unique>
+        <xs:unique name="dbo_FactPrescriptions_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_FactPrescriptions" />
+          <xs:field xpath="PrescriptionFactKey" />
+        </xs:unique>
+        <xs:unique name="dbo_FactDoctorMonthlySummary_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+          <xs:selector xpath=".//dbo_FactDoctorMonthlySummary" />
+          <xs:field xpath="SummaryKey" />
+        </xs:unique>
+      </xs:element>
+      <xs:annotation>
+        <xs:appinfo>
+          <msdata:Relationship name="FactVisits_Date" msdata:parent="dbo_DimDate" msdata:child="dbo_FactVisits" msdata:parentkey="DateKey" msdata:childkey="DateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_RecoveryDate" msdata:parent="dbo_DimDate" msdata:child="dbo_FactVisits" msdata:parentkey="DateKey" msdata:childkey="RecoveryDateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_Patient" msdata:parent="dbo_DimPatient" msdata:child="dbo_FactVisits" msdata:parentkey="PatientKey" msdata:childkey="PatientKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_Doctor" msdata:parent="dbo_DimDoctor" msdata:child="dbo_FactVisits" msdata:parentkey="DoctorKey" msdata:childkey="DoctorKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_Disease" msdata:parent="dbo_DimDisease" msdata:child="dbo_FactVisits" msdata:parentkey="DiseaseKey" msdata:childkey="DiseaseKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_AgeGroup" msdata:parent="dbo_DimAgeGroup" msdata:child="dbo_FactVisits" msdata:parentkey="AgeGroupKey" msdata:childkey="AgeGroupKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_Outcome" msdata:parent="dbo_DimClinicalOutcome" msdata:child="dbo_FactVisits" msdata:parentkey="OutcomeKey" msdata:childkey="OutcomeKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactVisits_Source" msdata:parent="NQ_SourceSystem" msdata:child="dbo_FactVisits" msdata:parentkey="SourceSystem" msdata:childkey="SourceSystem" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Date" msdata:parent="dbo_DimDate" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="DateKey" msdata:childkey="DateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_RecoveryDate" msdata:parent="dbo_DimDate" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="DateKey" msdata:childkey="RecoveryDateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Patient" msdata:parent="dbo_DimPatient" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="PatientKey" msdata:childkey="PatientKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Doctor" msdata:parent="dbo_DimDoctor" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="DoctorKey" msdata:childkey="DoctorKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Disease" msdata:parent="dbo_DimDisease" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="DiseaseKey" msdata:childkey="DiseaseKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_AgeGroup" msdata:parent="dbo_DimAgeGroup" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="AgeGroupKey" msdata:childkey="AgeGroupKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Outcome" msdata:parent="dbo_DimClinicalOutcome" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="OutcomeKey" msdata:childkey="OutcomeKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="NQVP_Source" msdata:parent="NQ_SourceSystem" msdata:child="NQ_FactVisitsPatients" msdata:parentkey="SourceSystem" msdata:childkey="SourceSystem" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Date" msdata:parent="dbo_DimDate" msdata:child="dbo_FactPrescriptions" msdata:parentkey="DateKey" msdata:childkey="DateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Patient" msdata:parent="dbo_DimPatient" msdata:child="dbo_FactPrescriptions" msdata:parentkey="PatientKey" msdata:childkey="PatientKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Doctor" msdata:parent="dbo_DimDoctor" msdata:child="dbo_FactPrescriptions" msdata:parentkey="DoctorKey" msdata:childkey="DoctorKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Disease" msdata:parent="dbo_DimDisease" msdata:child="dbo_FactPrescriptions" msdata:parentkey="DiseaseKey" msdata:childkey="DiseaseKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Medication" msdata:parent="dbo_DimMedication" msdata:child="dbo_FactPrescriptions" msdata:parentkey="MedicationKey" msdata:childkey="MedicationKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_AgeGroup" msdata:parent="dbo_DimAgeGroup" msdata:child="dbo_FactPrescriptions" msdata:parentkey="AgeGroupKey" msdata:childkey="AgeGroupKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactRx_Source" msdata:parent="NQ_SourceSystem" msdata:child="dbo_FactPrescriptions" msdata:parentkey="SourceSystem" msdata:childkey="SourceSystem" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactDMS_Date" msdata:parent="dbo_DimDate" msdata:child="dbo_FactDoctorMonthlySummary" msdata:parentkey="DateKey" msdata:childkey="MonthDateKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="FactDMS_Doctor" msdata:parent="dbo_DimDoctor" msdata:child="dbo_FactDoctorMonthlySummary" msdata:parentkey="DoctorKey" msdata:childkey="DoctorKey" msprop:Description="" msprop:IsLogical="True" />
+          <msdata:Relationship name="Disease_Chapter" msdata:parent="NQ_ICD10Chapters" msdata:child="dbo_DimDisease" msdata:parentkey="ChapterLetter" msdata:childkey="ICD10Chapter" msprop:Description="" msprop:IsLogical="True" />
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:schema>
+    <Polyclinic_x0020_DW xmlns="" />
+  </Schema>
+</DataSourceView>

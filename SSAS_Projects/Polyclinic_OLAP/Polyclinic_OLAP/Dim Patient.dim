@@ -1,0 +1,333 @@
+﻿<Dimension xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Dim Patient</ID>
+  <Name>Dim Patient</Name>
+  <Description>Пацієнти, SCD Type 2 (район і адреса історизуються)</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <UnknownMember>None</UnknownMember>
+  <AttributeAllMemberName>Усі</AttributeAllMemberName>
+  <ErrorConfiguration>
+    <KeyDuplicate>ReportAndStop</KeyDuplicate>
+  </ErrorConfiguration>
+  <Language>1058</Language>
+  <Attributes>
+    <Attribute>
+      <ID>Patient Version</ID>
+      <Name>Версія пацієнта</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>PatientKey</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>250</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimPatient</TableID>
+          <ColumnID>VersionName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Patient</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Пацієнт</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>District</AttributeID>
+          <Name>Район</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Address</AttributeID>
+          <Name>Адреса</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Current Version</AttributeID>
+          <Name>Поточна версія</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Valid From</AttributeID>
+          <Name>Версія діє з</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Valid To</AttributeID>
+          <Name>Версія діє до</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Patient</ID>
+      <Name>Пацієнт</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>PatientID_Source</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>200</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimPatient</TableID>
+          <ColumnID>PatientName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Gender</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Стать</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Birth Year</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Рік народження</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Blood Type</AttributeID>
+          <Name>Група крові</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Medical Card</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Медична картка</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Phone</AttributeID>
+          <Name>Телефон</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Registration Date</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Дата реєстрації</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>District</ID>
+      <Name>Район</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>DistrictName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Gender</ID>
+      <Name>Стать</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>1</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>Gender</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>15</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimPatient</TableID>
+          <ColumnID>GenderName</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Birth Year</ID>
+      <Name>Рік народження</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>SmallInt</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>BirthYear</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Key</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Blood Type</ID>
+      <Name>Група крові</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>15</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>BloodType</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Current Version</ID>
+      <Name>Поточна версія</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>CurrentVersionName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Medical Card</ID>
+      <Name>Медична картка</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>MedicalCardNumber</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Address</ID>
+      <Name>Адреса</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>250</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>AddressLine</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Phone</ID>
+      <Name>Телефон</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>Phone</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Registration Date</ID>
+      <Name>Дата реєстрації</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Date</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>RegistrationDate</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Valid From</ID>
+      <Name>Версія діє з</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>10</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>ValidFromText</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+    <Attribute>
+      <ID>Valid To</ID>
+      <Name>Версія діє до</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>10</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimPatient</TableID>
+            <ColumnID>ValidToText</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Geography</ID>
+      <Name>Географія</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Район</ID>
+          <Name>Район</Name>
+          <SourceAttributeID>District</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Пацієнт</ID>
+          <Name>Пацієнт</Name>
+          <SourceAttributeID>Patient Version</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+    <Hierarchy>
+      <ID>Demography</ID>
+      <Name>Демографія</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Стать</ID>
+          <Name>Стать</Name>
+          <SourceAttributeID>Gender</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Пацієнт</ID>
+          <Name>Пацієнт</Name>
+          <SourceAttributeID>Patient</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

@@ -1,0 +1,211 @@
+﻿<Dimension xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Dim Clinical Outcome</ID>
+  <Name>Dim Clinical Outcome</Name>
+  <Description>Тип візиту, тяжкість, результат лікування</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <UnknownMember>None</UnknownMember>
+  <AttributeAllMemberName>Усі</AttributeAllMemberName>
+  <ErrorConfiguration>
+    <KeyDuplicate>ReportAndStop</KeyDuplicate>
+  </ErrorConfiguration>
+  <Language>1058</Language>
+  <Attributes>
+    <Attribute>
+      <ID>Outcome</ID>
+      <Name>Клінічний випадок</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>OutcomeKey</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>100</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimClinicalOutcome</TableID>
+          <ColumnID>OutcomeName</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Visit Type</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Тип візиту</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Severity</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Тяжкість</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Treatment Outcome</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Результат лікування</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Visit Type</ID>
+      <Name>Тип візиту</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>VisitType</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Severity</ID>
+      <Name>Тяжкість</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>Severity</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Severity Order</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Порядок тяжкості</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>AttributeKey</OrderBy>
+      <OrderByAttributeID>Severity Order</OrderByAttributeID>
+    </Attribute>
+    <Attribute>
+      <ID>Severity Order</ID>
+      <Name>Порядок тяжкості</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>UnsignedTinyInt</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>SeverityOrder</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Treatment Outcome</ID>
+      <Name>Результат лікування</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>TreatmentOutcome</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Outcome Group</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Група результату</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Recovered</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Одужання</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Closed</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Стан випадку</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Outcome Group</ID>
+      <Name>Група результату</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>OutcomeGroup</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Recovered</ID>
+      <Name>Одужання</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>RecoveredName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Closed</ID>
+      <Name>Стан випадку</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>20</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimClinicalOutcome</TableID>
+            <ColumnID>ClosedName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>Results</ID>
+      <Name>Результати лікування</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Група результату</ID>
+          <Name>Група результату</Name>
+          <SourceAttributeID>Outcome Group</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Результат</ID>
+          <Name>Результат</Name>
+          <SourceAttributeID>Treatment Outcome</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>

@@ -1,0 +1,2179 @@
+<?xml version="1.0"?>
+<DTS:Executable
+  xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/23/2026 12:00:00 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-I5COGTD"
+  DTS:CreatorName="DESKTOP-I5COGTD\LEGION"
+  DTS:Description="Факт рецептів: інкрементально за CreatedAt, ключі вимірів успадковуються від FactVisits"
+  DTS:DTSID="{7468CAE2-107F-E938-C05C-AD8317217477}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1016.0"
+  DTS:LocaleID="1058"
+  DTS:ObjectName="Fact_Prescriptions"
+  DTS:PackageType="5"
+  DTS:VersionBuild="1"
+  DTS:VersionGUID="{7E336692-5299-5BE1-DD88-96B21E95B26A}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:Description="ExecutionID запуску пакета Master (0 — автономний запуск)"
+      DTS:DTSID="{D9D3EFBA-1F0B-58A7-054D-710E5718CBB2}"
+      DTS:ObjectName="ParentExecutionID">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A1BB044F-F4FE-E040-2576-15984C0CCB93}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="ExecutionID">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{339D2391-37BC-46EA-39DA-754A441C0FC3}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowsFact">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4A969D50-60BC-5696-3736-0A9DF44ADD45}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="RowsRejected">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8A7364C0-8BC9-2BB7-9D84-5E6584847716}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="WmRx">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6F3B34BD-5C17-1C95-38DC-21220B8609C1}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="HiRx">
+      <DTS:VariableValue
+        DTS:DataType="7">1/1/1900</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\SQL Початок аудиту"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Реєстрація запуску пакета в etl.PackageExecutionLog (аудит ETL)"
+      DTS:DTSID="{11CD4382-49B2-5741-1242-F3534EFB86CF}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Початок аудиту"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_StartExecution @PackageName = ?, @LoadType = ?, @ParentExecutionID = ?, @ExecutionID = ? OUTPUT;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="100" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="$Project::LoadType"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="20" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="$Package::ParentExecutionID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Output"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Перевірка імітації збою"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Тест відновлення: збій, якщо SimulateFailureAt = ім'я пакета (далі — рестарт з checkpoint)"
+      DTS:DTSID="{9D076377-FB0E-3859-020C-DD282CE5728B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Перевірка імітації збою"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_SSIS_CheckSimulatedFailure @SimulateFailureAt = ?, @PackageName = ?;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="$Project::SimulateFailureAt"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="100" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="System::PackageName"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="130"
+            SQLTask:ParameterSize="100" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Watermark Prescriptions"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{BCB6EC0D-CB09-B9F8-3A65-F89F229FE9F1}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Watermark Prescriptions"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="SELECT CAST(LastLoadedValue AS DATETIME) AS Wm FROM etl.Watermarks WHERE TableName = 'Prescriptions';"
+          SQLTask:ResultType="ResultSetType_SingleRow"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::WmRx" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Верхня межа Prescriptions"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{EE5752BA-2D08-D62B-4EA2-B57082DE9EA3}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Верхня межа Prescriptions"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{37370480-95B7-203E-4CDB-46E6C8BDA7D7}"
+          SQLTask:SqlStatementSource="SELECT CAST(ISNULL(MAX(CreatedAt), '19000101') AS DATETIME) AS Hi FROM dbo.Prescriptions;"
+          SQLTask:ResultType="ResultSetType_SingleRow"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::HiRx" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SEQ Факт у staging"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Очищення staging + Data Flow (точка рестарту checkpoint)"
+      DTS:DTSID="{B69C8F2C-FD83-3C72-A9C8-517FBB3FC574}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SEQ Факт у staging">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Факт у staging\SQL Очистити stg FactPrescriptions"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{DE8B0764-6DA5-0C95-6276-76B9C340BFCF}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL Очистити stg FactPrescriptions"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+              SQLTask:SqlStatementSource="TRUNCATE TABLE stg.FactPrescriptions;"
+              xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\SEQ Факт у staging\DFT Факт рецептів"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Нові рецепти -&gt; Lookup FactVisits (ключі) -&gt; Lookup DimMedication -&gt; вартість -&gt; stg.FactPrescriptions"
+          DTS:DTSID="{0E872A81-CC9B-E32D-0B39-3BC9E12A551B}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="DFT Факт рецептів"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="SRC OLTP Нові рецепти"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT pr.PrescriptionID, pr.DiagnosisID, pr.MedicationID, pr.QuantityPackages, pr.DurationDays, pr.IsSubsidized,
+       CAST(pr.CreatedAt AS DATETIME) AS SourceUpdatedAt
+FROM dbo.Prescriptions pr
+WHERE pr.CreatedAt &gt; ? AND pr.CreatedAt &lt;= ?</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1251</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping">"Parameter0:Input",{8A7364C0-8BC9-2BB7-9D84-5E6584847716};"Parameter1:Input",{6F3B34BD-5C17-1C95-38DC-21220B8609C1};</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Connections[OleDbConnection]"
+                      connectionManagerID="{37370480-95B7-203E-4CDB-46E6C8BDA7D7}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DESKTOP-I5COGTD.PolyclinicOLTP]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[PrescriptionID]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[PrescriptionID]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[PrescriptionID]"
+                          name="PrescriptionID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[DiagnosisID]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]"
+                          name="DiagnosisID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[MedicationID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[MedicationID]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[MedicationID]"
+                          name="MedicationID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]"
+                          dataType="ui1"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[QuantityPackages]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]"
+                          name="QuantityPackages"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DurationDays]"
+                          dataType="i2"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[DurationDays]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DurationDays]"
+                          name="DurationDays"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[IsSubsidized]"
+                          dataType="bool"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[IsSubsidized]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[IsSubsidized]"
+                          name="IsSubsidized"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[SourceUpdatedAt]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[SourceUpdatedAt]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[SourceUpdatedAt]"
+                          name="SourceUpdatedAt"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[PrescriptionID]"
+                          dataType="i8"
+                          name="PrescriptionID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[DiagnosisID]"
+                          dataType="i8"
+                          name="DiagnosisID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[MedicationID]"
+                          dataType="i4"
+                          name="MedicationID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[QuantityPackages]"
+                          dataType="ui1"
+                          name="QuantityPackages" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[DurationDays]"
+                          dataType="i2"
+                          name="DurationDays" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[IsSubsidized]"
+                          dataType="bool"
+                          name="IsSubsidized" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].ExternalColumns[SourceUpdatedAt]"
+                          dataType="dbTimeStamp"
+                          name="SourceUpdatedAt" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[PrescriptionID]"
+                          dataType="i8"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[PrescriptionID]"
+                          name="PrescriptionID" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[DiagnosisID]"
+                          dataType="i8"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[DiagnosisID]"
+                          name="DiagnosisID" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[MedicationID]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[MedicationID]"
+                          name="MedicationID" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[QuantityPackages]"
+                          dataType="ui1"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[QuantityPackages]"
+                          name="QuantityPackages" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[DurationDays]"
+                          dataType="i2"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[DurationDays]"
+                          name="DurationDays" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[IsSubsidized]"
+                          dataType="bool"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[IsSubsidized]"
+                          name="IsSubsidized" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[SourceUpdatedAt]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[SourceUpdatedAt]"
+                          name="SourceUpdatedAt" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="LKP FactVisits ключі діагнозу"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT DiagnosisID_Source, DateKey, PatientKey, DoctorKey, DiseaseKey, AgeGroupKey
+FROM dbo.FactVisits WHERE SourceSystem = N'OLTP'</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">1</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="DiagnosisID_Source" dataType="DT_I8" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DateKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="PatientKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DoctorKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="DiseaseKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="AgeGroupKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1251</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Connections[OleDbConnection]"
+                      connectionManagerID="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DESKTOP-I5COGTD.PolyclinicDW]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input].Columns[DiagnosisID]"
+                          cachedDataType="i8"
+                          cachedName="DiagnosisID"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">DiagnosisID_Source</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output]"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DateKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DateKey]"
+                          name="DateKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">DateKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[PatientKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[PatientKey]"
+                          name="PatientKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">PatientKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DoctorKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DoctorKey]"
+                          name="DoctorKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">DoctorKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DiseaseKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DiseaseKey]"
+                          name="DiseaseKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">DiseaseKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[AgeGroupKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[AgeGroupKey]"
+                          name="AgeGroupKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">AgeGroupKey</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="LKP DimMedication"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT MedicationID_Source, MedicationKey, CAST(UnitPrice * 100 AS INT) AS UnitPriceCents FROM dbo.DimMedication WHERE MedicationKey &lt;&gt; -1</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="MedicationID_Source" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="MedicationKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="UnitPriceCents" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1251</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Connections[OleDbConnection]"
+                      connectionManagerID="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DESKTOP-I5COGTD.PolyclinicDW]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input].Columns[MedicationID]"
+                          cachedDataType="i4"
+                          cachedName="MedicationID"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[MedicationID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">MedicationID_Source</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="IgnoreFailure"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[MedicationKey]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[MedicationKey]"
+                          name="MedicationKey"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">MedicationKey</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]"
+                          name="UnitPriceCents"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">UnitPriceCents</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="DC Вартість рецепту"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input].Columns[MedicationKey]"
+                          cachedDataType="i4"
+                          cachedName="MedicationKey"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[MedicationKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input].Columns[UnitPriceCents]"
+                          cachedDataType="i4"
+                          cachedName="UnitPriceCents"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input].Columns[QuantityPackages]"
+                          cachedDataType="ui1"
+                          cachedName="QuantityPackages"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input].Columns[IsSubsidized]"
+                          cachedDataType="bool"
+                          cachedName="IsSubsidized"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[IsSubsidized]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SourceSystem]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="20"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SourceSystem]"
+                          name="SourceSystem"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">"OLTP"</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">"OLTP"</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[MedicationKeyF]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[MedicationKeyF]"
+                          name="MedicationKeyF"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">[REPLACENULL](#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[MedicationKey]},-1)</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">REPLACENULL(MedicationKey,-1)</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[UnitPriceSnapshot]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          precision="10"
+                          scale="2"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[UnitPriceSnapshot]"
+                          name="UnitPriceSnapshot"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">[ISNULL](#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]}) ? (DT_NUMERIC,10,2)0 : (DT_NUMERIC,10,2)([ROUND]((DT_R8)#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]} / 100, 2) + 0.000001)</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">ISNULL(UnitPriceCents) ? (DT_NUMERIC,10,2)0 : (DT_NUMERIC,10,2)(ROUND((DT_R8)UnitPriceCents / 100, 2) + 0.000001)</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[TotalMedicationCostUAH]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          precision="12"
+                          scale="2"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[TotalMedicationCostUAH]"
+                          name="TotalMedicationCostUAH"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">[ISNULL](#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]}) ? (DT_NUMERIC,12,2)0 : (DT_NUMERIC,12,2)([ROUND]((DT_R8)#{Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]} * (DT_R8)#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]} / 100, 2) + 0.000001)</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">ISNULL(UnitPriceCents) ? (DT_NUMERIC,12,2)0 : (DT_NUMERIC,12,2)(ROUND((DT_R8)QuantityPackages * (DT_R8)UnitPriceCents / 100, 2) + 0.000001)</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SubsidizedAmountUAH]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          precision="12"
+                          scale="2"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SubsidizedAmountUAH]"
+                          name="SubsidizedAmountUAH"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">#{Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[IsSubsidized]} &amp;&amp; ![ISNULL](#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]}) ? (DT_NUMERIC,12,2)([ROUND]((DT_R8)#{Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]} * (DT_R8)#{Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output].Columns[UnitPriceCents]} * 0.8 / 100, 2) + 0.000001) : (DT_NUMERIC,12,2)0</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">IsSubsidized &amp;&amp; !ISNULL(UnitPriceCents) ? (DT_NUMERIC,12,2)(ROUND((DT_R8)QuantityPackages * (DT_R8)UnitPriceCents * 0.8 / 100, 2) + 0.000001) : (DT_NUMERIC,12,2)0</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="DC Доплата пацієнта"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input].Columns[TotalMedicationCostUAH]"
+                          cachedDataType="numeric"
+                          cachedPrecision="12"
+                          cachedScale="2"
+                          cachedName="TotalMedicationCostUAH"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[TotalMedicationCostUAH]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input].Columns[SubsidizedAmountUAH]"
+                          cachedDataType="numeric"
+                          cachedPrecision="12"
+                          cachedScale="2"
+                          cachedName="SubsidizedAmountUAH"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SubsidizedAmountUAH]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Output].Columns[PatientPaidUAH]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          precision="12"
+                          scale="2"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Output].Columns[PatientPaidUAH]"
+                          name="PatientPaidUAH"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_NUMERIC,12,2)(#{Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[TotalMedicationCostUAH]} - #{Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SubsidizedAmountUAH]})</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_NUMERIC,12,2)(TotalMedicationCostUAH - SubsidizedAmountUAH)</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="RC Рядки факту">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowsFact</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="DST stg FactPrescriptions"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[stg].[FactPrescriptions]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1251</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Connections[OleDbConnection]"
+                      connectionManagerID="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DESKTOP-I5COGTD.PolyclinicDW]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[SourceSystem]"
+                          cachedDataType="wstr"
+                          cachedLength="20"
+                          cachedName="SourceSystem"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SourceSystem]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SourceSystem]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[PrescriptionID]"
+                          cachedDataType="i8"
+                          cachedName="PrescriptionID"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PrescriptionID_Source]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[PrescriptionID]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[DiagnosisID]"
+                          cachedDataType="i8"
+                          cachedName="DiagnosisID"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DiagnosisID_Source]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[DateKey]"
+                          cachedDataType="i4"
+                          cachedName="DateKey"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DateKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DateKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[PatientKey]"
+                          cachedDataType="i4"
+                          cachedName="PatientKey"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PatientKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[PatientKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[DoctorKey]"
+                          cachedDataType="i4"
+                          cachedName="DoctorKey"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DoctorKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DoctorKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[DiseaseKey]"
+                          cachedDataType="i4"
+                          cachedName="DiseaseKey"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DiseaseKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[DiseaseKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[MedicationKeyF]"
+                          cachedDataType="i4"
+                          cachedName="MedicationKeyF"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[MedicationKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[MedicationKeyF]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[AgeGroupKey]"
+                          cachedDataType="i4"
+                          cachedName="AgeGroupKey"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[AgeGroupKey]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output].Columns[AgeGroupKey]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[IsSubsidized]"
+                          cachedDataType="bool"
+                          cachedName="IsSubsidized"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[IsSubsidized]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[IsSubsidized]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[QuantityPackages]"
+                          cachedDataType="ui1"
+                          cachedName="QuantityPackages"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[QuantityPackages]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[QuantityPackages]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[DurationDays]"
+                          cachedDataType="i2"
+                          cachedName="DurationDays"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[CourseDurationDays]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DurationDays]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[UnitPriceSnapshot]"
+                          cachedDataType="numeric"
+                          cachedPrecision="10"
+                          cachedScale="2"
+                          cachedName="UnitPriceSnapshot"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[UnitPriceSnapshot]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[UnitPriceSnapshot]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[TotalMedicationCostUAH]"
+                          cachedDataType="numeric"
+                          cachedPrecision="12"
+                          cachedScale="2"
+                          cachedName="TotalMedicationCostUAH"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[TotalMedicationCostUAH]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[TotalMedicationCostUAH]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[SubsidizedAmountUAH]"
+                          cachedDataType="numeric"
+                          cachedPrecision="12"
+                          cachedScale="2"
+                          cachedName="SubsidizedAmountUAH"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SubsidizedAmountUAH]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output].Columns[SubsidizedAmountUAH]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[PatientPaidUAH]"
+                          cachedDataType="numeric"
+                          cachedPrecision="12"
+                          cachedScale="2"
+                          cachedName="PatientPaidUAH"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PatientPaidUAH]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Output].Columns[PatientPaidUAH]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].Columns[SourceUpdatedAt]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="SourceUpdatedAt"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SourceUpdatedAt]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[SourceUpdatedAt]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SourceSystem]"
+                          dataType="wstr"
+                          length="20"
+                          name="SourceSystem" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PrescriptionID_Source]"
+                          dataType="i8"
+                          name="PrescriptionID_Source" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DiagnosisID_Source]"
+                          dataType="i8"
+                          name="DiagnosisID_Source" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DateKey]"
+                          dataType="i4"
+                          name="DateKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PatientKey]"
+                          dataType="i4"
+                          name="PatientKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DoctorKey]"
+                          dataType="i4"
+                          name="DoctorKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[DiseaseKey]"
+                          dataType="i4"
+                          name="DiseaseKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[MedicationKey]"
+                          dataType="i4"
+                          name="MedicationKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[AgeGroupKey]"
+                          dataType="i4"
+                          name="AgeGroupKey" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[IsSubsidized]"
+                          dataType="bool"
+                          name="IsSubsidized" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[QuantityPackages]"
+                          dataType="ui1"
+                          name="QuantityPackages" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[CourseDurationDays]"
+                          dataType="i2"
+                          name="CourseDurationDays" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[UnitPriceSnapshot]"
+                          dataType="numeric"
+                          precision="10"
+                          scale="2"
+                          name="UnitPriceSnapshot" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[TotalMedicationCostUAH]"
+                          dataType="numeric"
+                          precision="12"
+                          scale="2"
+                          name="TotalMedicationCostUAH" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SubsidizedAmountUAH]"
+                          dataType="numeric"
+                          precision="12"
+                          scale="2"
+                          name="SubsidizedAmountUAH" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[PatientPaidUAH]"
+                          dataType="numeric"
+                          precision="12"
+                          scale="2"
+                          name="PatientPaidUAH" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input].ExternalColumns[SourceUpdatedAt]"
+                          dataType="dbTimeStamp"
+                          name="SourceUpdatedAt" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено"
+                  componentClassID="Microsoft.DerivedColumn"
+                  contactInfo="Derived Column;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Creates new column values by applying expressions to transformation input columns. Create new columns or overwrite existing ones. For example, concatenate the values from the 'first name' and 'last name' column to make a 'full name' column."
+                  name="DC ERR Діагноз не завантажено"
+                  usesDispositions="true">
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input]"
+                      description="Input to the Derived Column Transformation"
+                      name="Derived Column Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input].Columns[PrescriptionID]"
+                          cachedDataType="i8"
+                          cachedName="PrescriptionID"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[PrescriptionID]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input].Columns[DiagnosisID]"
+                          cachedDataType="i8"
+                          cachedName="DiagnosisID"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]" />
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output]"
+                      description="Default Output of the Derived Column Transformation"
+                      exclusionGroup="1"
+                      name="Derived Column Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrExecutionID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrExecutionID]"
+                          name="ErrExecutionID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[User::ExecutionID]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[User::ExecutionID]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrPackageName]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="100"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrPackageName]"
+                          name="ErrPackageName"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">@[System::PackageName]</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">@[System::PackageName]</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrSourceSystem]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="20"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrSourceSystem]"
+                          name="ErrSourceSystem"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">"OLTP"</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">"OLTP"</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrRecordID]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrRecordID]"
+                          name="ErrRecordID"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">(DT_WSTR,20)#{Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[PrescriptionID]}</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">(DT_WSTR,20)PrescriptionID</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrCode]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="50"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrCode]"
+                          name="ErrCode"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">"ERR_DIAGNOSIS_NOT_LOADED"</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">"ERR_DIAGNOSIS_NOT_LOADED"</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrColumn]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="128"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrColumn]"
+                          name="ErrColumn"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">"DiagnosisID"</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">"DiagnosisID"</property>
+                          </properties>
+                        </outputColumn>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrReason]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Computation"
+                          errorRowDisposition="FailComponent"
+                          length="500"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrReason]"
+                          name="ErrReason"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Expression"
+                              name="Expression">"Діагноз " + (DT_WSTR,20)#{Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output].Columns[DiagnosisID]} + " відсутній у FactVisits"</property>
+                            <property
+                              containsID="true"
+                              dataType="System.String"
+                              description="Derived Column Friendly Expression"
+                              expressionType="Notify"
+                              name="FriendlyExpression">"Діагноз " + (DT_WSTR,20)DiagnosisID + " відсутній у FactVisits"</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Derived Column Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені"
+                  componentClassID="Microsoft.RowCount"
+                  contactInfo="Row Count;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;0"
+                  description="Counts rows as they pass through a data flow. For example, use the number of rows processed to determine whether or not to perform cleanup operations, or update text in an e-mail message to communicate processing status."
+                  name="RC Відхилені">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable to hold the row count."
+                      name="VariableName">User::RowsRejected</property>
+                  </properties>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені.Inputs[Row Count Input 1]"
+                      hasSideEffects="true"
+                      name="Row Count Input 1">
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені.Outputs[Row Count Output 1]"
+                      name="Row Count Output 1"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені.Inputs[Row Count Input 1]">
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="DST etl ErrorRecords"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[etl].[ErrorRecords]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1251</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Connections[OleDbConnection]"
+                      connectionManagerID="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DESKTOP-I5COGTD.PolyclinicDW]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrExecutionID]"
+                          cachedDataType="i4"
+                          cachedName="ErrExecutionID"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionID]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrExecutionID]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrPackageName]"
+                          cachedDataType="wstr"
+                          cachedLength="100"
+                          cachedName="ErrPackageName"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[PackageName]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrPackageName]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrSourceSystem]"
+                          cachedDataType="wstr"
+                          cachedLength="20"
+                          cachedName="ErrSourceSystem"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[SourceSystem]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrSourceSystem]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrRecordID]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="ErrRecordID"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[SourceRecordID]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrRecordID]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrCode]"
+                          cachedDataType="wstr"
+                          cachedLength="50"
+                          cachedName="ErrCode"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorCode]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrCode]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrColumn]"
+                          cachedDataType="wstr"
+                          cachedLength="128"
+                          cachedName="ErrColumn"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorColumn]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrColumn]" />
+                        <inputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].Columns[ErrReason]"
+                          cachedDataType="wstr"
+                          cachedLength="500"
+                          cachedName="ErrReason"
+                          externalMetadataColumnId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorReason]"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output].Columns[ErrReason]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorRecordID]"
+                          dataType="i8"
+                          name="ErrorRecordID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ExecutionID]"
+                          dataType="i4"
+                          name="ExecutionID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[PackageName]"
+                          dataType="wstr"
+                          length="100"
+                          name="PackageName" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[SourceSystem]"
+                          dataType="wstr"
+                          length="20"
+                          name="SourceSystem" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[SourceFile]"
+                          dataType="wstr"
+                          length="260"
+                          name="SourceFile" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[SourceRecordID]"
+                          dataType="wstr"
+                          length="50"
+                          name="SourceRecordID" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorCode]"
+                          dataType="wstr"
+                          length="50"
+                          name="ErrorCode" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorColumn]"
+                          dataType="wstr"
+                          length="128"
+                          name="ErrorColumn" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[ErrorReason]"
+                          dataType="wstr"
+                          length="500"
+                          name="ErrorReason" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[RawData]"
+                          dataType="wstr"
+                          length="2000"
+                          name="RawData" />
+                        <externalMetadataColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input].ExternalColumns[LoggedAt]"
+                          dataType="dbTimeStamp2"
+                          name="LoggedAt" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[OLE DB Source Output]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Inputs[Lookup Input]"
+                  name="OLE DB Source Output"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\SRC OLTP Нові рецепти.Outputs[OLE DB Source Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Lookup Match Output]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Inputs[Lookup Input]"
+                  name="Lookup Match Output"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Lookup Match Output 2]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Inputs[Derived Column Input]"
+                  name="Lookup Match Output 2"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP DimMedication.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Derived Column Output]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Inputs[Derived Column Input]"
+                  name="Derived Column Output"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Вартість рецепту.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Derived Column Output 2]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту.Inputs[Row Count Input 1]"
+                  name="Derived Column Output 2"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\DC Доплата пацієнта.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Row Count Output 1]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\DST stg FactPrescriptions.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Рядки факту.Outputs[Row Count Output 1]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Lookup No Match Output]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Inputs[Derived Column Input]"
+                  name="Lookup No Match Output"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\LKP FactVisits ключі діагнозу.Outputs[Lookup No Match Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Derived Column Output 3]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені.Inputs[Row Count Input 1]"
+                  name="Derived Column Output 3"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\DC ERR Діагноз не завантажено.Outputs[Derived Column Output]" />
+                <path
+                  refId="Package\SEQ Факт у staging\DFT Факт рецептів.Paths[Row Count Output 1 2]"
+                  endId="Package\SEQ Факт у staging\DFT Факт рецептів\DST etl ErrorRecords.Inputs[OLE DB Destination Input]"
+                  name="Row Count Output 1 2"
+                  startId="Package\SEQ Факт у staging\DFT Факт рецептів\RC Відхилені.Outputs[Row Count Output 1]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\SEQ Факт у staging.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{6B003980-3604-4FBE-CAB4-36664384BF5D}"
+          DTS:From="Package\SEQ Факт у staging\SQL Очистити stg FactPrescriptions"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\SEQ Факт у staging\DFT Факт рецептів" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL MERGE FactPrescriptions"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{AFA116E6-56BE-5E5D-6CBD-14D883598D6B}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL MERGE FactPrescriptions"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_SSIS_ApplyFact @Fact = N'FactPrescriptions', @ExecutionID = ?, @RowsRead = ?, @RowsRejected = ?, @TaskStart = ?;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::RowsFact"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="2"
+            SQLTask:DtsVariableName="User::RowsRejected"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="3"
+            SQLTask:DtsVariableName="System::StartTime"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Зсунути watermark Prescriptions"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{3327A99F-67F8-D380-12BD-7F29207C0D83}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Зсунути watermark Prescriptions"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_SetWatermark @TableName = 'Prescriptions', @NewValue = ?, @ExecutionID = ?;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::HiRx"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="7"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\SQL Завершення аудиту"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Фіксація успішного завершення та підсумкових лічильників рядків"
+      DTS:DTSID="{35F16B9A-0D94-E4E7-FD6F-04FD5F10EF60}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="SQL Завершення аудиту"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+          SQLTask:SqlStatementSource="EXEC etl.usp_FinishExecution @ExecutionID = ?;"
+          xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::ExecutionID"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{8A4B57B0-A85F-A3D8-CF13-579B4E52380B}"
+      DTS:From="Package\SQL Початок аудиту"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\SQL Перевірка імітації збою" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{BA8A5E63-B744-2E69-63BF-EA4CFA6660FF}"
+      DTS:From="Package\SQL Перевірка імітації збою"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\SQL Watermark Prescriptions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{6C2D5BE3-2D53-FDF3-D52C-DDE7609EACF5}"
+      DTS:From="Package\SQL Watermark Prescriptions"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\SQL Верхня межа Prescriptions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{98C0B5BB-325F-AA1A-3930-2CC8BD062726}"
+      DTS:From="Package\SQL Верхня межа Prescriptions"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\SEQ Факт у staging" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{E60095CE-D2F5-D632-E5AB-29EF1BE4C406}"
+      DTS:From="Package\SEQ Факт у staging"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\SQL MERGE FactPrescriptions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{2A9CCE9F-56C6-7D2B-F122-49CF7FB0C613}"
+      DTS:From="Package\SQL MERGE FactPrescriptions"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\SQL Зсунути watermark Prescriptions" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{66687494-4141-9E26-D20A-91564C108F75}"
+      DTS:From="Package\SQL Зсунути watermark Prescriptions"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\SQL Завершення аудиту" />
+  </DTS:PrecedenceConstraints>
+  <DTS:EventHandlers>
+    <DTS:EventHandler
+      DTS:refId="Package.EventHandlers[OnError]"
+      DTS:CreationName="OnError"
+      DTS:DTSID="{47E1CF2A-0895-D184-63D8-0C0C781A8C93}"
+      DTS:EventID="916760112"
+      DTS:EventName="OnError"
+      DTS:LocaleID="-1">
+      <DTS:Variables>
+        <DTS:Variable
+          DTS:CreationName=""
+          DTS:Description="The propagate property of the event"
+          DTS:DTSID="{4FE8BCA7-2B90-B61E-0D58-575956F5EB71}"
+          DTS:IncludeInDebugDump="6789"
+          DTS:Namespace="System"
+          DTS:ObjectName="Propagate">
+          <DTS:VariableValue
+            DTS:DataType="11">-1</DTS:VariableValue>
+        </DTS:Variable>
+      </DTS:Variables>
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package.EventHandlers[OnError]\SQL Журнал помилки"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="OnError: позначити запуск як Failed і зберегти текст помилки"
+          DTS:DTSID="{F8711C21-95C6-133A-79E1-66322A8852B3}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="SQL Журнал помилки"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{AF0D2A11-A476-8F7A-81D2-D230B18B8A71}"
+              SQLTask:SqlStatementSource="EXEC etl.usp_FailExecution @ExecutionID = ?, @ErrorMessage = ?;"
+              xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::ExecutionID"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="1"
+                SQLTask:DtsVariableName="System::ErrorDescription"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="130"
+                SQLTask:ParameterSize="4000" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+    </DTS:EventHandler>
+  </DTS:EventHandlers>
+</DTS:Executable>

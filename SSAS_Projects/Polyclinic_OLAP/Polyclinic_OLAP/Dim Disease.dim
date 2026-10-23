@@ -1,0 +1,189 @@
+﻿<Dimension xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0" xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">
+  <ID>Dim Disease</ID>
+  <Name>Dim Disease</Name>
+  <Description>Хвороби за МКХ-10 (сніжинка: розділи МКХ-10 — іменований запит)</Description>
+  <CreatedTimestamp>0001-01-01T00:00:00Z</CreatedTimestamp>
+  <LastSchemaUpdate>0001-01-01T00:00:00Z</LastSchemaUpdate>
+  <LastProcessed>0001-01-01T00:00:00Z</LastProcessed>
+  <State>Unprocessed</State>
+  <Source xsi:type="DataSourceViewBinding">
+    <DataSourceViewID>Polyclinic DW</DataSourceViewID>
+  </Source>
+  <UnknownMember>None</UnknownMember>
+  <AttributeAllMemberName>Усі</AttributeAllMemberName>
+  <ErrorConfiguration>
+    <KeyDuplicate>ReportAndStop</KeyDuplicate>
+  </ErrorConfiguration>
+  <Language>1058</Language>
+  <Attributes>
+    <Attribute>
+      <ID>Disease</ID>
+      <Name>Хвороба</Name>
+      <Usage>Key</Usage>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>Integer</DataType>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDisease</TableID>
+            <ColumnID>DiseaseKey</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>220</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>dbo_DimDisease</TableID>
+          <ColumnID>DiseaseDisplay</ColumnID>
+        </Source>
+      </NameColumn>
+      <AttributeRelationships>
+        <AttributeRelationship>
+          <AttributeID>Chapter</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Розділ МКХ-10</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Category</AttributeID>
+          <Name>Категорія хвороби</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Course</AttributeID>
+          <Name>Перебіг</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>Profile Specialty</AttributeID>
+          <Name>Профільна спеціальність</Name>
+        </AttributeRelationship>
+        <AttributeRelationship>
+          <AttributeID>ICD10 Code</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
+          <Name>Код МКХ-10</Name>
+        </AttributeRelationship>
+      </AttributeRelationships>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Chapter</ID>
+      <Name>Розділ МКХ-10</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>1</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>NQ_ICD10Chapters</TableID>
+            <ColumnID>ChapterLetter</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <NameColumn>
+        <DataType>WChar</DataType>
+        <DataSize>100</DataSize>
+        <Source xsi:type="ColumnBinding">
+          <TableID>NQ_ICD10Chapters</TableID>
+          <ColumnID>ChapterName</ColumnID>
+        </Source>
+      </NameColumn>
+      <OrderBy>Key</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Category</ID>
+      <Name>Категорія хвороби</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDisease</TableID>
+            <ColumnID>DiseaseCategory</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+      <AttributeHierarchyVisible>false</AttributeHierarchyVisible>
+    </Attribute>
+    <Attribute>
+      <ID>Course</ID>
+      <Name>Перебіг</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>30</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDisease</TableID>
+            <ColumnID>ChronicStatusName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>Profile Specialty</ID>
+      <Name>Профільна спеціальність</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>100</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDisease</TableID>
+            <ColumnID>ProfileSpecialtyName</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <OrderBy>Name</OrderBy>
+    </Attribute>
+    <Attribute>
+      <ID>ICD10 Code</ID>
+      <Name>Код МКХ-10</Name>
+      <KeyColumns>
+        <KeyColumn>
+          <DataType>WChar</DataType>
+          <DataSize>10</DataSize>
+          <Source xsi:type="ColumnBinding">
+            <TableID>dbo_DimDisease</TableID>
+            <ColumnID>ICD10Code</ColumnID>
+          </Source>
+        </KeyColumn>
+      </KeyColumns>
+      <AttributeHierarchyEnabled>false</AttributeHierarchyEnabled>
+    </Attribute>
+  </Attributes>
+  <Hierarchies>
+    <Hierarchy>
+      <ID>ICD10</ID>
+      <Name>МКХ-10</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Розділ</ID>
+          <Name>Розділ</Name>
+          <SourceAttributeID>Chapter</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Хвороба</ID>
+          <Name>Хвороба</Name>
+          <SourceAttributeID>Disease</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+    <Hierarchy>
+      <ID>Categories</ID>
+      <Name>Категорії</Name>
+      <AllMemberName>Усі</AllMemberName>
+      <Levels>
+        <Level>
+          <ID>Категорія</ID>
+          <Name>Категорія</Name>
+          <SourceAttributeID>Category</SourceAttributeID>
+        </Level>
+        <Level>
+          <ID>Хвороба</ID>
+          <Name>Хвороба</Name>
+          <SourceAttributeID>Disease</SourceAttributeID>
+        </Level>
+      </Levels>
+    </Hierarchy>
+  </Hierarchies>
+</Dimension>
