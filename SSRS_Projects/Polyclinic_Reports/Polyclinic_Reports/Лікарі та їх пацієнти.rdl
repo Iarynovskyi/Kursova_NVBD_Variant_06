@@ -1730,7 +1730,7 @@ FROM ( SELECT STRTOSET(@Doctors, CONSTRAINED) ON COLUMNS
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Лікарі та їх пацієнти</Value>
+                      <Value>Список лікарів та їх пацієнтів</Value>
                       <Style>
                         <FontFamily>Segoe UI</FontFamily>
                         <FontSize>16pt</FontSize>

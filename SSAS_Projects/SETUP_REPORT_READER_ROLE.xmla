@@ -1,0 +1,56 @@
+﻿<!-- =====================================================================
+     Файл: SETUP_REPORT_READER_ROLE.xmla
+     Опис: Роль безпеки куба для службового облікового запису звітів SSRS (Етап 5, п. 5.5 «Безпека»)
+           Роль «Читачі звітів» (ReportReaders): Read на базу Polyclinic_OLAP і на куб «Polyclinic DW»,
+           член — локальний Windows-користувач DESKTOP-I5COGTD\ssrs_reader, від імені якого спільне
+           джерело даних PolyclinicOLAP (збережені облікові дані) виконує звіти з кешу та підписок.
+     Передумова: Windows-користувача ssrs_reader створено (net user ssrs_reader <пароль> /add).
+     Запуск: SSMS → Connect → Analysis Services → DESKTOP-I5COGTD →
+             File → Open → цей файл → Execute (F5). Повторювати після повного Deploy куба з Visual Studio.
+     ===================================================================== -->
+<Batch xmlns="http://schemas.microsoft.com/analysisservices/2003/engine" Transaction="true">
+  <Create AllowOverwrite="true">
+    <ParentObject>
+      <DatabaseID>Polyclinic_OLAP</DatabaseID>
+    </ParentObject>
+    <ObjectDefinition>
+      <Role xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <ID>ReportReaders</ID>
+        <Name>Читачі звітів</Name>
+        <Description>Лише читання куба для служби звітів SSRS (збережені облікові дані джерела PolyclinicOLAP)</Description>
+        <Members>
+          <Member>
+            <Name>DESKTOP-I5COGTD\ssrs_reader</Name>
+          </Member>
+        </Members>
+      </Role>
+    </ObjectDefinition>
+  </Create>
+  <Create AllowOverwrite="true">
+    <ParentObject>
+      <DatabaseID>Polyclinic_OLAP</DatabaseID>
+    </ParentObject>
+    <ObjectDefinition>
+      <DatabasePermission xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <ID>DatabasePermission_ReportReaders</ID>
+        <Name>DatabasePermission_ReportReaders</Name>
+        <RoleID>ReportReaders</RoleID>
+        <Read>Allowed</Read>
+      </DatabasePermission>
+    </ObjectDefinition>
+  </Create>
+  <Create AllowOverwrite="true">
+    <ParentObject>
+      <DatabaseID>Polyclinic_OLAP</DatabaseID>
+      <CubeID>Polyclinic DW</CubeID>
+    </ParentObject>
+    <ObjectDefinition>
+      <CubePermission xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <ID>CubePermission_ReportReaders</ID>
+        <Name>CubePermission_ReportReaders</Name>
+        <RoleID>ReportReaders</RoleID>
+        <Read>Allowed</Read>
+      </CubePermission>
+    </ObjectDefinition>
+  </Create>
+</Batch>

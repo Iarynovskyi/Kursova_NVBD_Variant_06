@@ -14,6 +14,7 @@
 | `MDX_Queries.mdx` | 10 демонстраційних MDX-запитів |
 | `VERIFY_CUBE.sql` | Перевірка куба через linked server: структура, звірка зі сховищем, MDX, продуктивність (35 перевірок PASS/FAIL) |
 | `BACKUP_CUBE.xmla` | Резервна копія бази `Polyclinic_OLAP` → `Polyclinic_OLAP.abf` |
+| `SETUP_REPORT_READER_ROLE.xmla` | Роль безпеки «Читачі звітів» (Read на базу й куб) для службового облікового запису звітів `ssrs_reader` |
 
 ## Розгортання
 
@@ -21,6 +22,7 @@
 2. Visual Studio → `Polyclinic_OLAP.slnx` → **Deploy** на сервер Analysis Services (база `Polyclinic_OLAP`) → **Process Full**.
 3. SSMS → `VERIFY_CUBE.sql` (35/35 PASS); SSMS → Analysis Services → New MDX Query → `MDX_Queries.mdx`.
 4. Резервна копія: SSMS → Analysis Services → `BACKUP_CUBE.xmla` → Execute.
+5. Доступ для звітів SSRS: SSMS → Analysis Services → `SETUP_REPORT_READER_ROLE.xmla` → Execute (повторити після повного Deploy куба).
 
 ## Архітектура куба
 
@@ -69,7 +71,7 @@ flowchart TB
 | **Distinct Count** | Унікальних пацієнтів (окрема група мір) |
 | **Average** | реалізовано обчислюваними мірами (Sum / Count) — коректно на будь-якому рівні: Середня тривалість прийому у хв, Середня вартість платного прийому у грн, Середня тривалість лікування у днях |
 
-### MDX-обчислення (26 обчислюваних мір, 4 набори, 2 обчислювані члени, 2 KPI)
+### MDX-обчислення (24 обчислювані міри, 4 набори, 2 обчислювані члени, 2 KPI)
 
 | Категорія | Обчислення |
 |---|---|
@@ -101,6 +103,6 @@ flowchart TB
 
 | Запит | Час |
 |---|---:|
-| Куб, холодний кеш | 204 мс |
-| Куб, теплий кеш | 36 мс |
+| Куб, холодний кеш | 243 мс |
+| Куб, теплий кеш | 37 мс |
 | Той самий запит без агрегацій | 1 763 мс |

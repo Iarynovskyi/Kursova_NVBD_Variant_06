@@ -3,12 +3,12 @@
 **Дисципліна:** Надвеликі бази даних
 **Тема:** Розробка та аналіз надвеликої бази даних з використанням технологій Microsoft SQL Server
 **Предметна область:** поліклініка — пацієнти, лікарі, діагнози, хвороби (МКХ-10), лікарські засоби, протипоказання
-**Студент:** `Яриновськи Дмитро Валерійович`, група `ПМ-42`
+**Студент:** Яриновський Дмитро Валерійович, група ПМ-42
 
 | Матеріал | Посилання |
 |---|---|
-| Пояснювальна записка (PDF) | [`Documentation/`](Documentation/) — `Звіт_<ПІБ>.pdf` |
-| Відеопрезентація (YouTube) | `<посилання на відео>` |
+| Пояснювальна записка (PDF) | [`Documentation/Звіт_Яриновський_Дмитро.pdf`](Documentation/Звіт_Яриновський_Дмитро.pdf) |
+| Відеопрезентація (YouTube) | `<посилання на відео>` <!-- TODO: вставити після публікації --> |
 
 ---
 
@@ -20,7 +20,7 @@
 flowchart LR
     A[(PolyclinicOLTP<br/>11 таблиць, 3НФ<br/>~2 млн рядків)] -->|SSIS<br/>Polyclinic_ETL| C[(PolyclinicDW<br/>зірка: 7 вимірів,<br/>3 факти)]
     B[/Архів Філії №2<br/>10 CSV, 40 044 рядки/] -->|Flat File + очищення| C
-    C -->|SSAS<br/>Polyclinic_OLAP| D{{Куб «Polyclinic DW»<br/>9 вимірів, 30 мір,<br/>26 обчислюваних, 2 KPI}}
+    C -->|SSAS<br/>Polyclinic_OLAP| D{{Куб «Polyclinic DW»<br/>9 вимірів, 30 мір,<br/>24 обчислювані міри + 2 обчислювані члени, 2 KPI}}
     D -->|SSRS<br/>Polyclinic_Reports| E[[7 звітів<br/>портал /Reports]]
 ```
 
@@ -29,14 +29,14 @@ flowchart LR
 | 1. Проєктування БД (15) | OLTP `PolyclinicOLTP`: 11 таблиць у 3НФ, PK/FK/CHECK/UNIQUE/DEFAULT, 12 індексів, 7 тригерів, 3 функції, 5 процедур | [Database/](Database/) |
 | 2. Генерація даних (10) | 60 000 пацієнтів, 551 883 візити, 574 952 діагнози (історії хвороб), 607 834 рецепти, 100 000 препаратів; 2016–2025 (10 років); резервна копія, верифікація 42/42 PASS | [DataGeneration/](DataGeneration/) |
 | 3. ETL, SSIS (25) | Сховище `PolyclinicDW` (зірка, SCD1 + SCD2), 6 пакетів, 9 типів трансформацій, інкрементальне завантаження, checkpoint-відновлення, аудит | [SSIS_Projects/](SSIS_Projects/) |
-| 4. OLAP-куб, SSAS (25) | 9 вимірів (Time, SCD2, сніжинка), 5 груп мір / 30 мір, 26 обчислюваних мір, 4 набори, 2 KPI, 3 перспективи, партиції MOLAP/HOLAP/ROLAP, агрегації ≈30 % | [SSAS_Projects/](SSAS_Projects/) |
-| 5. Звіти, SSRS (25) | 5 обов'язкових звітів варіанту + реєстр пацієнтів + підзвіт; Table, Matrix, Chart, Dashboard, Drill-down/Drillthrough; 5 типів параметрів | [SSRS_Projects/](SSRS_Projects/) |
+| 4. OLAP-куб, SSAS (25) | 9 вимірів (Time, SCD2, сніжинка), 5 груп мір / 30 мір, 24 обчислювані міри + 2 обчислювані члени, 4 набори, 2 KPI, 3 перспективи, партиції MOLAP/HOLAP/ROLAP, агрегації ≈30 % | [SSAS_Projects/](SSAS_Projects/) |
+| 5. Звіти, SSRS (25) | 5 обов'язкових звітів варіанту + реєстр пацієнтів + підзвіт; Table, Matrix, Chart, Dashboard, Drill-down/Drillthrough; 5 типів параметрів; безпека, кешування, підписка (PDF у спільну папку) | [SSRS_Projects/](SSRS_Projects/) |
 
 ### Обов'язкові звіти варіанту
 
 | № | Звіт варіанту 6 | Файл | Тип |
 |---|---|---|---|
-| 1 | Список лікарів та їх пацієнтів | `Лікарі та їх пацієнти.rdl` | Таблиця з групами, drill-down, drillthrough |
+| 1 | Список лікарів та їх пацієнтів | `Лікарі та їх пацієнти.rdl` | Таблиця з групами, drill-down, drillthrough (заголовок звіту — «Список лікарів та їх пацієнтів») |
 | 2 | Історія хвороби пацієнта | `Історія хвороби пацієнта.rdl` (+ `Рецепти діагнозу.rdl`, `Реєстр пацієнтів.rdl`) | Документ із підзвітом |
 | 3 | Завантаженість лікарів по місяцях | `Завантаженість лікарів по місяцях.rdl` | Матриця + Column/Line |
 | 4 | Аналіз ефективності лікування | `Аналіз ефективності лікування.rdl` | Дашборд: KPI, gauge, індикатори, sparkline |
@@ -81,7 +81,7 @@ Kursova_NVBD_Variant_06/
 2. **Сховище.** `Database/CREATE_DW.sql` → `Database/RUN_ETL_PIPELINE.sql` (процедури `etl.*`).
 3. **SSIS.** Відкрити `SSIS_Projects/Polyclinic_ETL/Polyclinic_ETL.slnx` → Deploy у `SSISDB\Polyclinic` → `SSIS_Projects/RUN_SSIS_CATALOG.sql` (`@LoadType = 'Full'`) → `Database/VERIFY_DW.sql`.
 4. **SSAS.** `SSAS_Projects/SETUP_SSAS_PERMISSIONS.sql` → відкрити `Polyclinic_OLAP.slnx` → Deploy + Process Full → `SSAS_Projects/VERIFY_CUBE.sql`.
-5. **SSRS.** Відкрити `SSRS_Projects/Polyclinic_Reports/Polyclinic_Reports.slnx` → Deploy на `http://<сервер>/ReportServer` → портал `/Reports` → `Поліклініка/Звіти`.
+5. **SSRS.** Відкрити `SSRS_Projects/Polyclinic_Reports/Polyclinic_Reports.slnx` → Deploy на `http://<сервер>/ReportServer` → портал `/Reports` → `Поліклініка/Звіти` → `SSRS_Projects/VERIFY_REPORTS.sql`; налаштування порталу (роль куба, збережені облікові дані, безпека, кеш, підписка) — [SSRS_Projects/README.md](SSRS_Projects/README.md#налаштування-порталу-безпека-кешування-підписки).
 
 Деталі кожного кроку — у README відповідної папки.
 
@@ -96,15 +96,18 @@ Kursova_NVBD_Variant_06/
 | Інкрементальне завантаження SSIS (watermarks, SCD2, UPSERT) | `SSIS_Projects/TEST_SSIS_INCREMENTAL.sql` | 12/12 PASS |
 | Відновлення після збою (checkpoint) | `SSIS_Projects/TEST_SSIS_CHECKPOINT.sql` | 12/12 PASS |
 | Куб: структура, звірка зі сховищем, MDX-обчислення, продуктивність | `SSAS_Projects/VERIFY_CUBE.sql` | 35/35 PASS |
-| Звіти: параметри, каскади, валідація дат, переходи, експорт | смоук-тест у Preview / на порталі | див. [SSRS_Projects/](SSRS_Projects/#тестування) |
+| Звіти: списки параметрів, каскади, дані звітів = сховище, захист параметрів (`CONSTRAINED`) | `SSRS_Projects/VERIFY_REPORTS.sql` | 27/27 PASS |
+| Звіти: інтерфейс — параметри, валідація дат, переходи, сортування, експорт | смоук-тест у Preview / на порталі | див. [SSRS_Projects/](SSRS_Projects/#тестування) |
 
-**Продуктивність куба** (типовий аналітичний запит): холодний кеш 204 мс, теплий кеш 36 мс; той самий запит без агрегацій — 1 763 мс.
+**Продуктивність куба** (типовий аналітичний запит): холодний кеш 243 мс, теплий кеш 37 мс; без агрегацій — 1 763 мс.
 
 ---
 
 ## Скріншоти
 
 > Зображення лежать у `Documentation/screenshots/` (перелік — у [Documentation/README.md](Documentation/README.md)).
+
+<!-- скріншоти будуть додані в Documentation/screenshots/ -->
 
 | | |
 |---|---|
